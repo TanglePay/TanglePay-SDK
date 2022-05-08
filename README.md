@@ -16,7 +16,7 @@ You may find the following instructions familiar if you are already an experienc
 ## Getting started
 NPM package
 
-`npm install soonaverse --save`
+`npm install tanglepay-sdk --save`
 
 For any non-trivial IOTA web application — a.k.a. dapp, web3 site etc. — to work, you will have to:
 
@@ -194,7 +194,7 @@ const initialize = () => {
     try {
       // Will open the TanglePay UI
       // You should disable this button while the request is pending!
-      await iota.request({ method: 'iota_requestAccounts' });
+      await iota.request({ method: 'iota_accounts' });
     } catch (error) {
       console.error(error);
     }
