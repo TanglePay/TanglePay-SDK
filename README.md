@@ -3,6 +3,27 @@ DApp SDK to interact with TanglePay wallets.
 
 You may find the following instructions familiar if you are already an experience DApp developer with Etherum, TanglePay.
 
+## Architecture
+```mermaid
+flowchart TB
+    
+    subgraph DApp
+    UI --> tanglepay.sdk
+    tanglepay.sdk-.->window.iota
+    end    
+    subgraph TanglePay
+    wallet-ui
+    wallet-backend-->window.iota
+    end
+    subgraph IOTA
+    hornet[(hornet)] 
+    end
+    
+    wallet-backend-->hornet
+    tanglepay.sdk-->wallet-ui
+```
+
+
 ## Supported Platforms
 - [X] Browser extensions
 - [ ] Mobile
@@ -105,7 +126,7 @@ Returns a Promise that resolves to the hash of signed messaage.
 
 If the user denies the request, the Promise will reject with an error.
 
-The request causes a MetaMask popup to appear. 
+The request causes a TanglePay popup to appear. 
 
 You should only request the user's accounts in response to user action, such as a button click. You should always disable the button that caused the request to be dispatched, while the request is still pending.
 
@@ -157,7 +178,7 @@ Wallet will use the private key to sign the payload directly and will not post t
 ##### Description
 Requests that the user to sign the given message. Returns a Promise that resolves to an array of a single IOTA address string. If the user denies the request, the Promise will reject with an error.
 
-The request causes a MetaMask popup to appear. You should only request the user's accounts in response to user action, such as a button click. You should always disable the button that caused the request to be dispatched, while the request is still pending.
+The request causes a TanglePay popup to appear. You should only request the user's accounts in response to user action, such as a button click. You should always disable the button that caused the request to be dispatched, while the request is still pending.
 
 If you can't retrieve the user's account(s), you should encourage the user to initiate an account request.
 
