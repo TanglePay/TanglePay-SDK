@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <style>
+        #text {
+            max-width: 70%;
+            word-wrap: break-word;    
+        }
+        h2 {
+            padding-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>TanglePay-SDK</h2>
+    Hi, this is the demo site of integrating your DApp with IOTA using TanglePay wallet.
+    <br/>
+    For more details, please refer to the spec <a href="https://github.com/TanglePay/TanglePay-SDK" target="_blank">here</a>.
+
+    <h2>Wallet status </h2>
+    <div id="status">Wallet not installed</div>
+
+    <div>
+        <h2>API examples </h2>
+
+        <h4>iota_connect</h4>
+        <button onclick="onConnect()" class="btn btn-primary">Connect</button>
+
+        <h4>iota_sign</h4>
+        <button onclick="onSign()" class="btn btn-primary">Sign </button>
+
+        <h4>iota_accounts</h4>
+        <button onclick="onGetAccounts()" class="btn btn-primary">Get accounts</button>
+
+        <h4>iota_getBalance</h4>
+        <button onclick="getBalances()" class="btn btn-primary">Get balances</button>
+    </div>
+
+    <div>
+        <h2>High level examples </h2>
+        Get address and balance in one click
+        <br />
+        <button onclick="getOne()" class="btn btn-primary">Connect</button>
+        <div id="text"></div>
+    </div>
+</body>
+<script src="./dist/index.js"></script>
+<script>
+    const dom = document.getElementById('text')
+    const status = document.getElementById('status')
+
+    window.addEventListener('iota-ready', () => {
+        const iota = window.iota
+        status.innerText = `${iota?.isTanglePay ? 'TanglePay installed' : 'TanglePay not installed'}
+            Version: ${iota.tanglePayVersion || '--'}
+        `
+
+        // isKeepPopup: whether close the pop up
+        window.onSign = async (bool) => {
+            try {
+                const res = await iota.request({
+                    method: 'iota_sign',
+                    isKeepPopup: bool,
+                    params: ['test sign content']
+                })
+                dom.innerText += `
+    Sign result: ${JSON.stringify(res)}                
+    `
+            } catch (error) {
+                dom.innerText += `
+    Sign result: ${JSON.stringify(error)}                
+    `
+            }
+        }
+
+        window.onConnect = async (bool) => {
+            try {
+                const res = await iota.request({
+                    method: 'iota_connect',
+                    isKeepPopup: bool
+                })
+                dom.innerText += `
+    Connect result: ${JSON.stringify(res)}                
+    `
+                return res
+            } catch (error) {
+                console.log(error, '----')
+                dom.innerText += `
+    Connect result: ${JSON.stringify(error)}                
+    `
+            }
+        }
+
+        window.onGetAccounts = async (bool) => {
+            try {
+                const res = await iota.request({
+                    method: 'iota_accounts',
+                    isKeepPopup: bool
+                })
+                window.addressList = res
+                dom.innerText += `
+    GetAccounts result: ${JSON.stringify(res)}                
+    `
+                return res
+            } catch (error) {
+                dom.innerText += `
+    GetAccounts result: ${JSON.stringify(error)}                
+    `
+            }
+        }
+
+        window.getBalances = async (bool, addressList) => {
+            addressList = addressList || window?.addressList
+            if (!addressList?.length) {
+                dom.innerText += `
+    Please get accounts first.
+    `
+                return
+            }
+            try {
+                const res = await iota.request({
+                    method: 'iota_getBalance',
+                    isKeepPopup: bool,
+                    params: {
+                        assetsList: ['iota'],
+                        addressList
+                    }
+                })
+
+                dom.innerText += `
+    Get balance result: ${JSON.stringify(res)}                
+    `
+                return res
+            } catch (error) {
+                dom.innerText += `
+    Get balance result: ${JSON.stringify(error)}                
+    `
+                return res
+            }
+        }
+
+        window.getOne = async () => {
+            await window.onConnect(true)
+            const res1 = await window.onGetAccounts(true)
+            const res2 = await window.getBalances(false, res1)
+            console.log(res2)
+        }
+
+        iota.on('accountsChanged', (e) => {
+            const { address, isConnect } = e
+            dom.innerText += `
+    Switch account event: ${JSON.stringify(e)}                
+    `
+            window.getOne()
+            // if (isConnect) {
+            //     window.getOne()
+            // } else {
+            //     window.location.reload()
+            // }
+        })
+
+        window.getOne()
+    })
+</script>
+
+</html>

@@ -1,0 +1,35 @@
+{
+    "name": "tanglepay-sdk",
+    "version": "0.0.1",
+    "description": "DApp SDK to interact with TanglePay wallets",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "webpack"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/TanglePay/TanglePay-SDK.git"
+    },
+    "keywords": [
+        "TanglePay",
+        "Dapp",
+        "Iota",
+        "wallet"
+    ],
+    "author": "TanglePay",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/TanglePay/TanglePay-SDK/issues"
+    },
+    "homepage": "https://github.com/TanglePay/TanglePay-SDK#readme",
+    "devDependencies": {
+        "@babel/core": "^7.17.10",
+        "@babel/plugin-transform-runtime": "^7.17.10",
+        "@babel/preset-env": "^7.17.10",
+        "babel-loader": "^8.2.5",
+        "clean-webpack-plugin": "^4.0.0",
+        "webpack": "^5.72.1",
+        "webpack-cli": "^4.9.2"
+    },
+    "dependencies": {}
+}
