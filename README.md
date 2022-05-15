@@ -2,7 +2,7 @@
 This repostiory contains Javascript/Typescript SDK for DApps in `IOTA` ecosystem to interact with TanglePay wallets.
 
 You may find the following instructions familiar if you are already an experience DApp developer with Etherum, Metamask.
-For more details, please refer to the specification below or the [Demo](https://tanglepay.github.io/TanglePay-Sdk/).
+For more details, please refer to the specification below or the [Demo](https://tanglepay.github.io/TanglePay-SDK/).
 
 ## Architecture
 ```mermaid
@@ -200,4 +200,4 @@ If you can't retrieve the user's account(s), you should encourage the user to in
 
 ## Best-Practice
 ### Create a sample DApp on IOTA
-Please refer to the demo [here](https://tanglepay.github.io/TanglePay-Sdk/).
+Please refer to the demo [here](https://tanglepay.github.io/TanglePay-SDK/).
