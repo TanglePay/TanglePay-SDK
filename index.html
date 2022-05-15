@@ -20,30 +20,44 @@
     <style>
         #text {
             max-width: 70%;
-            word-wrap: break-word;
+            word-wrap: break-word;    
+        }
+        h2 {
+            padding-top: 30px;
         }
     </style>
 </head>
 
 <body>
+    <h2>TanglePay-SDK</h2>
+    Hi, this is the demo site of integrating your DApp with IOTA using TanglePay wallet.
+    <br/>
+    For more details, please refer to the spec <a href="https://github.com/TanglePay/TanglePay-SDK" target="_blank">here</a>.
+
     <h2>Wallet status </h2>
     <div id="status">Wallet not installed</div>
-    <br />
 
     <div>
         <h2>API examples </h2>
-        <button onclick="onConnect()" class="btn btn-primary">Connect wallet / iota_connect </button>
-        <button onclick="onSign()" class="btn btn-primary">Sign / iota_sign </button>
-        <button onclick="onGetAccounts()" class="btn btn-primary">Get accounts / iota_accounts </button>
-        <button onclick="getBalances()" class="btn btn-primary">Get balances / iota_getBalance</button>
+
+        <h4>iota_connect</h4>
+        <button onclick="onConnect()" class="btn btn-primary">Connect</button>
+
+        <h4>iota_sign</h4>
+        <button onclick="onSign()" class="btn btn-primary">Sign </button>
+
+        <h4>iota_accounts</h4>
+        <button onclick="onGetAccounts()" class="btn btn-primary">Get accounts</button>
+
+        <h4>iota_getBalance</h4>
+        <button onclick="getBalances()" class="btn btn-primary">Get balances</button>
     </div>
 
-    <br />
     <div>
         <h2>High level examples </h2>
         Get address and balance in one click
         <br />
-        <button onclick="getOne()" class="btn btn-primary">Try!</button>
+        <button onclick="getOne()" class="btn btn-primary">Connect</button>
         <div id="text"></div>
     </div>
 </body>
