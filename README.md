@@ -1,7 +1,8 @@
 # TanglePay - Javascript/Typescript SDK
-DApp SDK to interact with TanglePay wallets.
+This repostiory contains Javascript/Typescript SDK for DApps in `IOTA` ecosystem to interact with TanglePay wallets.
 
-You may find the following instructions familiar if you are already an experience DApp developer with Etherum, TanglePay.
+You may find the following instructions familiar if you are already an experience DApp developer with Etherum, Metamask.
+For more details, please refer to the specification below or the [Demo](https://tanglepay.github.io/TanglePay-Sdk/).
 
 ## Architecture
 ```mermaid
@@ -72,6 +73,8 @@ In practice, if a method has any `params`, they are almost always of type `Array
 
 If the request fails for any reason, the Promise will reject with an `ProviderError`.
 
+The `keepPopup` argument is only used in brower context to help DApp determine the management of extension experience.
+
 Check the TanglePay Wallet API documentation for details.
 
 ##### Example
@@ -89,6 +92,7 @@ params: [
 iota
   .request({
     method: 'iota_sign',
+    keepPopup: true
     params,
   })
   .then((result) => {
@@ -114,8 +118,20 @@ interface ProviderError extends Error {
   data?: unknown;
 }
 ```
-### Wallet API
-#### iota_accounts
+### Wallet APIs
+#### *iota_connect*
+##### Returns
+The IOTA address of current connected wallet.
+
+##### Parameters
+```javascript
+params: [
+]
+```
+The users will be redirected to the TanglePay and confirm connecting DApp with the current signed in wallet.
+
+
+#### *iota_accounts*
 ##### Returns
 string[] - An array of a logged in IOTA address string.
 
@@ -130,7 +146,7 @@ The request causes a TanglePay popup to appear.
 
 You should only request the user's accounts in response to user action, such as a button click. You should always disable the button that caused the request to be dispatched, while the request is still pending.
 
-#### iota_getBalance
+#### *iota_getBalance*
 ##### Returns
 Returns the balance of the account of given address.
 
@@ -162,7 +178,7 @@ params: [
 ]
 ```
 
-#### iota_sign
+#### *iota_sign*
 ##### Returns
 Signed hash data.
 
@@ -173,7 +189,7 @@ params: [
     '<data to sign>',
 ]
 ```
-Wallet will use the private key to sign the payload directly and will not post the message to IOTA network.
+Wallet will use the private key to sign the payload directly and will **not** post the message to IOTA network.
 
 ##### Description
 Requests that the user to sign the given message. Returns a Promise that resolves to an array of a single IOTA address string. If the user denies the request, the Promise will reject with an error.
@@ -184,72 +200,4 @@ If you can't retrieve the user's account(s), you should encourage the user to in
 
 ## Best-Practice
 ### Create a sample DApp on IOTA
-
-**TODO: move this to demo site of this repository.**
-```javascript
-const initialize = () => {
-  //Basic Actions Section
-  const onboardButton = document.getElementById('connectButton');
-  const getAccountsButton = document.getElementById('getAccounts');
-  const getAccountsResult = document.getElementById('getAccountsResult');
-
-  //Created check function to see if the TanglePay extension is installed
-  const isTanglePayInstalled = () => {
-    //Have to check the iota binding on the window object to see if it's installed
-    const { iota } = window;
-    return Boolean(iota && iota.isTanglePay);
-  };
-
-  //We create a new TanglePay onboarding object to use in our app
-  const onboarding = new TanglePayOnboarding({});
-
-  //This will start the onboarding proccess
-  const onClickInstall = () => {
-    onboardButton.innerText = 'Onboarding in progress';
-    onboardButton.disabled = true;
-    //On this object we have startOnboarding which will start the onboarding process for our end user
-    onboarding.startOnboarding();
-  };
-
-  const onClickConnect = async () => {
-    try {
-      // Will open the TanglePay UI
-      // You should disable this button while the request is pending!
-      await iota.request({ method: 'iota_accounts' });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const TanglePayClientCheck = () => {
-    //Now we check to see if TanglePay is installed
-    if (!isTanglePayInstalled()) {
-      //If it isn't installed we ask the user to click to install it
-      onboardButton.innerText = 'Click here to install TanglePay!';
-      //When the button is clicked we call th is function
-      onboardButton.onclick = onClickInstall;
-      //The button is now disabled
-      onboardButton.disabled = false;
-    } else {
-      //If TanglePay is installed we ask the user to connect to their wallet
-      onboardButton.innerText = 'Connect';
-      //When the button is clicked we call this function to connect the users TanglePay Wallet
-      onboardButton.onclick = onClickConnect;
-      //The button is now disabled
-      onboardButton.disabled = false;
-    }
-  };
-
-  //Iota_Accounts-getAccountsButton
-  getAccountsButton.addEventListener('click', async () => {
-    //we use iota_accounts because it returns a list of addresses owned by us.
-    const accounts = await iota.request({ method: 'iota_accounts' });
-    //We take the first address in the array of addresses and display it
-    getAccountsResult.innerHTML = accounts[0] || 'Not able to get accounts';
-  });
-
-  TanglePayClientCheck();
-};
-
-window.addEventListener('DOMContentLoaded', initialize);
-```
+Please refer to the demo [here](https://tanglepay.github.io/TanglePay-Sdk/).
