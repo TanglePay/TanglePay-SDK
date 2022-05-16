@@ -1,19 +1,13 @@
-const localSetItem = (key, data) => {
-    window.localStorage.setItem(key, JSON.stringify(data || ''))
-}
-const localGetItem = (key) => {
-    let data = window.localStorage.getItem(key)
-    try {
-        data = JSON.parse(data)
-    } catch (error) {}
-    return data
-}
 // send message to content-script
 const sendToContentScript = (params) => {
     params.cmd = `injectToContent##${params.cmd}`
     params.origin = window.location.origin
-    // {cmd,origin,data,isKeepPopup}
-    window.postMessage(params, '*')
+    // params:{cmd,origin,data,isKeepPopup}
+    if (window.TanglePayEnv === 'app') {
+        window.ReactNativeWebView.postMessage(JSON.stringify(params))
+    } else {
+        window.postMessage(params, '*')
+    }
 }
 // get message from content-script
 window.addEventListener(
@@ -53,7 +47,7 @@ const toInstall = () => {
         }
     }
     if (isPc) {
-        global.open(
+        window.open(
             'https://chrome.google.com/webstore/detail/tanglepay-iota-wallet/hbneiaclpaaglopiogfdhgccebncnjmc?hl=en-US'
         )
     } else {
@@ -69,23 +63,12 @@ const iotaSDK = {
             toInstall()
         }
         return new Promise((resolve, reject) => {
-            const address = window.localStorage.getItem('tanglepay_connect_address') || ''
-            if (address) {
-                params = params || {}
-                params.connect_address = address
-            }
             window[`iota_request_${method}`] = function (res, code) {
                 if (code === 200) {
                     // cache iota address
                     if (method === 'iota_connect') {
                         const address = res.address || ''
                         window.curTanglePayAddress = address
-                        localSetItem('tanglepay_connect_address', address)
-                        const connectList = localGetItem('tanglepay_connect_list') || []
-                        if (!connectList.includes(address)) {
-                            connectList.push(address)
-                            localSetItem('tanglepay_connect_list', connectList)
-                        }
                     }
                     resolve(res)
                 } else {
@@ -102,12 +85,10 @@ const iotaSDK = {
     on: (event, handler) => {
         window[`iota_event_${event}`] = (res) => {
             if (event === 'accountsChanged') {
-                const connectList = localGetItem('tanglepay_connect_list') || []
                 if (window.curTanglePayAddress !== res.address) {
                     handler &&
                         handler({
-                            ...res,
-                            isConnect: connectList.includes(res.address)
+                            ...res
                         })
                 }
                 window.curTanglePayAddress = res.address || ''
@@ -117,8 +98,8 @@ const iotaSDK = {
         }
     }
 }
-global.addEventListener('load', () => {
-    const env = global.TanglePayEnv
+window.addEventListener('load', () => {
+    const env = window.TanglePayEnv
     switch (env) {
         case 'app':
         case 'chrome':
