@@ -98,7 +98,7 @@ const iotaSDK = {
         }
     }
 }
-window.addEventListener('load', () => {
+const onLoad = () => {
     const env = window.TanglePayEnv
     switch (env) {
         case 'app':
@@ -117,6 +117,13 @@ window.addEventListener('load', () => {
                 toInstall()
             }
             break
+    }
+}
+window.addEventListener('load', () => {
+    if (window.TanglePayEnv) {
+        onLoad()
+    } else {
+        setTimeout(onLoad, 500)
     }
 })
 window.iota = iotaSDK
