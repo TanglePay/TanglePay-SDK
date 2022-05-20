@@ -98,8 +98,16 @@ const iotaSDK = {
         }
     }
 }
+let loadNum = 0
 const onLoad = () => {
     const env = window.TanglePayEnv
+    if (!env) {
+        loadNum++
+        if (loadNum <= 10) {
+            setTimeout(onLoad, 300)
+            return
+        }
+    }
     switch (env) {
         case 'app':
         case 'chrome':
@@ -119,12 +127,7 @@ const onLoad = () => {
             break
     }
 }
-window.addEventListener('load', () => {
-    if (window.TanglePayEnv) {
-        onLoad()
-    } else {
-        setTimeout(onLoad, 500)
-    }
-})
+
+window.addEventListener('load', onLoad)
 window.iota = iotaSDK
 export default iotaSDK
