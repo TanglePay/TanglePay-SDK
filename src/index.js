@@ -48,7 +48,8 @@ const toInstall = () => {
     }
     if (isPc) {
         window.open(
-            'https://chrome.google.com/webstore/detail/tanglepay-iota-wallet/hbneiaclpaaglopiogfdhgccebncnjmc?hl=en-US'
+            'https://chrome.google.com/webstore/detail/tanglepay-iota-wallet/hbneiaclpaaglopiogfdhgccebncnjmc?hl=en-US',
+            'TanglePay-Extension'
         )
     } else {
         console.error('Browser not supported')
