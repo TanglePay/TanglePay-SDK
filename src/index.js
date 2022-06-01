@@ -69,7 +69,7 @@ const iotaSDK = {
                     // cache iota address
                     if (method === 'iota_connect') {
                         const address = res.address || ''
-                        window.curTanglePayAddress = address
+                        window.curTanglePayAddress = address + '_' + res.nodeId
                     }
                     resolve(res)
                 } else {
@@ -86,13 +86,14 @@ const iotaSDK = {
     on: (event, handler) => {
         window[`iota_event_${event}`] = (res) => {
             if (event === 'accountsChanged') {
-                if (window.curTanglePayAddress !== res.address) {
+                const address = res.address + '_' + res.nodeId
+                if (window.curTanglePayAddress !== address) {
                     handler &&
                         handler({
                             ...res
                         })
                 }
-                window.curTanglePayAddress = res.address || ''
+                window.curTanglePayAddress = address || ''
             } else {
                 handler && handler(res)
             }

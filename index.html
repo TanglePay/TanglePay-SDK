@@ -61,6 +61,9 @@
 
             <h4>iota_getBalance</h4>
             <button onclick="getBalances()" class="btn btn-primary">Get balances</button>
+
+            <h4>evm_getBalance</h4>
+            <button onclick="getEvmBalances()" class="btn btn-primary">Get Evm balances</button>
         </div>
 
         <div>
@@ -172,11 +175,41 @@
                 }
             }
 
+            window.getEvmBalances = async (bool, addressList) => {
+                addressList = addressList || window?.addressList
+                if (!addressList?.length) {
+                    dom.innerText += `
+    Please get accounts first.
+    `
+                    return
+                }
+                try {
+                    const res = await iota.request({
+                        method: 'evm_getBalance',
+                        isKeepPopup: bool,
+                        params: {
+                            assetsList: ['evm'], // ['evm']
+                            addressList
+                        }
+                    })
+
+                    dom.innerText += `
+    Get evm balance result: ${JSON.stringify(res)}                
+    `
+                    return res
+                } catch (error) {
+                    dom.innerText += `
+    Get evm balance result: ${JSON.stringify(error)}                
+    `
+                    return res
+                }
+            }
+
             window.getOne = async () => {
                 await window.onConnect(true)
                 const res1 = await window.onGetAccounts(true)
-                const res2 = await window.getBalances(false, res1)
-                console.log(res2)
+                const res2 = await window.getBalances(true, res1)
+                const res3 = await window.getEvmBalances(false, res1)
             }
 
             iota.on('accountsChanged', (e) => {
