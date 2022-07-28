@@ -2,7 +2,7 @@
 This repostiory contains Javascript/Typescript SDK for DApps in `IOTA` ecosystem to interact with TanglePay wallets.
 
 You may find the following instructions familiar if you are already an experience DApp developer with Etherum, Metamask.
-For more details, please refer to the specification below or the [Demo](https://tanglepay.github.io/TanglePay-SDK/).
+For more details, please refer to the specification below or the [Demo](https://tanglepay.github.io/TanglePay-Sdk/).
 
 ## Architecture
 ```mermaid
@@ -27,13 +27,22 @@ flowchart TB
 
 ## Supported Platforms
 - [X] Browser extensions
-- [ ] Mobile
+- [X] Mobile
 
 ## Supported Networks
 - [X] IOTA
-- [ ] Shimmer
+- [X] Shimmer
 - [ ] Assembly
-- [ ] EVM
+- [X] EVM
+
+## Support methods
+- [X] connect
+- [ ] disconnect
+- [X] sign
+- [X] accounts
+- [X] getBalance
+- [X] accountChanged
+- [X] sendTransaction
 
 ## Getting started
 NPM package
@@ -198,6 +207,39 @@ The request causes a TanglePay popup to appear. You should only request the user
 
 If you can't retrieve the user's account(s), you should encourage the user to initiate an account request.
 
+#### *iota_sendTransaction
+##### Returns
+```json
+{
+  "Data": {
+    "TransactionId": "<transaciton id>"
+  }
+}
+```
+
+##### Parameters
+```json
+{
+    "from": "<from>",
+    "to": "<to>",
+    "gas": "<gas>",
+    "gasPrice": "<gasPrice>",
+    "value": "<value>",
+    "tags": [],
+    "metadata": "<metadata>",
+    "data": "<data>",
+}
+```
+Create value transfer transactions given the following parameters.
+* `from`: (optional) if not specified, the wallet will select all available UTXOs from current wallet.
+* `to`: address of bech32 format.
+* `gas`: (optional) zero or optional for L1 networks.
+* `gasPrice`: (optional) zero or optional for L1 networks.
+* `value`: integer of the value to be transfered.
+* `tags`: (optional) additional tags to be sent with the transactions, only applicable for networks with Stardust upgrade.
+* `metadata`: (optional) additional metadata to be sent with the transactions, only applicable for networks with Stardust upgrade.
+* `data`: (optional): The compiled code of a contract.
+
 ## Best-Practice
 ### Create a sample DApp on IOTA
-Please refer to the demo [here](https://tanglepay.github.io/TanglePay-SDK/).
+Please refer to the demo [here](https://tanglepay.github.io/TanglePay-Sdk/).
