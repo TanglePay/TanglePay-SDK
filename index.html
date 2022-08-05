@@ -62,6 +62,12 @@
             <h4>iota_getBalance</h4>
             <button onclick="getBalances()" class="btn btn-primary">Get balances</button>
 
+            <h4>iota_sendTransaction</h4>
+            <button onclick="sendTransaction()" class="btn btn-primary">Send Transaction</button>
+
+            <h4>iota_changeAccount</h4>
+            <button onclick="changeAccount()" class="btn btn-primary">Change Account</button>
+
             <h4>evm_getBalance</h4>
             <button onclick="getEvmBalances()" class="btn btn-primary">Get Evm balances</button>
         </div>
@@ -171,7 +177,52 @@
                     dom.innerText += `
     Get balance result: ${JSON.stringify(error)}                
     `
+                    return error
+                }
+            }
+
+            window.sendTransaction = async () => {
+                try {
+                    const res = await iota.request({
+                        method: 'iota_sendTransaction',
+                        params: {
+                            from: 'iota1qzrhx0ey6w4a9x0xg3zxagq2ufrw45qv8nlv24tkpxeetk864a4rkewh7e5',
+                            to: 'iota1qqczmjuqnpmtpf8fvcct985u6um08d9tzjcuduf04hsu5sjp0tt0q5ek3s9',
+                            value: 1,
+                            data: 'test'
+                        }
+                    })
+
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(res)}                
+    `
                     return res
+                } catch (error) {
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(error)}                
+    `
+                    return error
+                }
+            }
+
+            window.changeAccount = async () => {
+                try {
+                    const res = await iota.request({
+                        method: 'iota_changeAccount',
+                        params: {
+                            network: 'bsc' //mainnet ,iota-evm
+                        }
+                    })
+
+                    dom.innerText += `
+    Change Account result: ${JSON.stringify(res)}                
+    `
+                    return res
+                } catch (error) {
+                    dom.innerText += `
+    Change Account result: ${JSON.stringify(error)}                
+    `
+                    return error
                 }
             }
 
@@ -201,7 +252,7 @@
                     dom.innerText += `
     Get evm balance result: ${JSON.stringify(error)}                
     `
-                    return res
+                    return error
                 }
             }
 
