@@ -68,8 +68,11 @@
             <h4>iota_changeAccount</h4>
             <button onclick="changeAccount()" class="btn btn-primary">Change Account</button>
 
-            <h4>evm_getBalance</h4>
-            <button onclick="getEvmBalances()" class="btn btn-primary">Get Evm balances</button>
+            <h4>eth_getBalance</h4>
+            <button onclick="getEthBalances()" class="btn btn-primary">Get Eth balances</button>
+
+            <h4>iota_getPublicKey</h4>
+            <button onclick="getPublicKey()" class="btn btn-primary">Get PublicKey</button>
         </div>
 
         <div>
@@ -186,7 +189,6 @@
                     const res = await iota.request({
                         method: 'iota_sendTransaction',
                         params: {
-                            from: 'iota1qzrhx0ey6w4a9x0xg3zxagq2ufrw45qv8nlv24tkpxeetk864a4rkewh7e5',
                             to: 'iota1qqczmjuqnpmtpf8fvcct985u6um08d9tzjcuduf04hsu5sjp0tt0q5ek3s9',
                             value: 1,
                             data: 'test'
@@ -226,7 +228,7 @@
                 }
             }
 
-            window.getEvmBalances = async (bool, addressList) => {
+            window.getEthBalances = async (bool, addressList) => {
                 addressList = addressList || window?.addressList
                 if (!addressList?.length) {
                     dom.innerText += `
@@ -236,7 +238,7 @@
                 }
                 try {
                     const res = await iota.request({
-                        method: 'evm_getBalance',
+                        method: 'eth_getBalance',
                         isKeepPopup: bool,
                         params: {
                             assetsList: ['evm'], // ['evm']
@@ -245,12 +247,31 @@
                     })
 
                     dom.innerText += `
-    Get evm balance result: ${JSON.stringify(res)}                
+    Get eth balance result: ${JSON.stringify(res)}                
     `
                     return res
                 } catch (error) {
                     dom.innerText += `
-    Get evm balance result: ${JSON.stringify(error)}                
+    Get eth balance result: ${JSON.stringify(error)}                
+    `
+                    return error
+                }
+            }
+
+            window.getPublicKey = async () => {
+                try {
+                    const res = await iota.request({
+                        method: 'iota_getPublicKey',
+                        isKeepPopup: true,
+                        params: {}
+                    })
+                    dom.innerText += `
+    Get eth publicKey result: ${JSON.stringify(res)}                
+    `
+                    return res
+                } catch (error) {
+                    dom.innerText += `
+    Get eth publicKey result: ${JSON.stringify(error)}                
     `
                     return error
                 }
@@ -260,7 +281,7 @@
                 await window.onConnect(true)
                 const res1 = await window.onGetAccounts(true)
                 const res2 = await window.getBalances(true, res1)
-                const res3 = await window.getEvmBalances(false, res1)
+                const res3 = await window.getEthBalances(false, res1)
             }
 
             iota.on('accountsChanged', (e) => {
