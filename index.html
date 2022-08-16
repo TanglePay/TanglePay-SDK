@@ -284,13 +284,18 @@
                 const res3 = await window.getEthBalances(false, res1)
             }
 
-            iota.on('accountsChanged', (e) => {
+            const changeAccountHandler = (e) => {
                 const { address } = e
                 dom.innerText += `
     Switch account event: ${JSON.stringify(e)}                
     `
-                window.getOne()
-            })
+                // window.getOne()
+            }
+            iota.on('accountsChanged', changeAccountHandler)
+            setTimeout(() => {
+                iota.removeListener('accountsChanged', changeAccountHandler)
+                iota.removeAllListener('accountsChanged')
+            }, 1000)
 
             window.getOne()
         })

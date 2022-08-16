@@ -22,10 +22,17 @@ window.addEventListener(
                 window.dispatchEvent(new CustomEvent('iota-ready'))
                 break
             case 'iota_request':
-            case 'iota_event':
                 {
                     const callBack = window[`${cmd}_${data.method}`]
                     callBack && callBack(data.response, code)
+                }
+                break
+            case 'iota_event':
+                {
+                    const list = window.iota_events[`${cmd}_${data.method}`]
+                    list.forEach((e) => {
+                        e.handler && e.handler(data.response, code)
+                    })
                 }
                 break
             default:
@@ -35,6 +42,7 @@ window.addEventListener(
     false
 )
 
+window.iota_events = {}
 // to install
 const toInstall = () => {
     const agents = new Array('Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod')
@@ -83,21 +91,41 @@ const iotaSDK = {
             })
         })
     },
-    on: (event, handler) => {
-        window[`iota_event_${event}`] = (res) => {
+    on: (event, callBack) => {
+        const key = `iota_event_${event}`
+        const handler = (res) => {
             if (event === 'accountsChanged') {
                 const address = res.address + '_' + res.nodeId
                 if (window.curTanglePayAddress !== address) {
-                    handler &&
-                        handler({
+                    callBack &&
+                        callBack({
                             ...res
                         })
                 }
                 window.curTanglePayAddress = address || ''
             } else {
-                handler && handler(res)
+                callBack && callBack(res)
             }
         }
+        const id = `${new Date().getTime()}${parseInt(Math.random() * 1000)}`
+        window.iota_events[key] = window.iota_events[key] || []
+        window.iota_events[key].push({
+            id,
+            handler,
+            callBack
+        })
+    },
+    removeListener(event, callBack) {
+        const key = `iota_event_${event}`
+        const list = window.iota_events[key] || []
+        const index = list.find((e) => e.callBack === callBack)
+        if (index >= 0) {
+            list.splice(index, 1)
+        }
+    },
+    removeAllListener(event) {
+        const key = `iota_event_${event}`
+        window.iota_events[key] = []
     }
 }
 let loadNum = 0
