@@ -68,11 +68,14 @@
             <h4>iota_changeAccount</h4>
             <button onclick="changeAccount()" class="btn btn-primary">Change Account</button>
 
-            <h4>eth_getBalance</h4>
-            <button onclick="getEthBalances()" class="btn btn-primary">Get Eth balances</button>
-
             <h4>iota_getPublicKey</h4>
             <button onclick="getPublicKey()" class="btn btn-primary">Get PublicKey</button>
+
+            <h4>eth_sign</h4>
+            <button onclick="onEthSign()" class="btn btn-primary">Eth Sign</button>
+
+            <h4>eth_getBalance</h4>
+            <button onclick="getEthBalances()" class="btn btn-primary">Get Eth balances</button>
         </div>
 
         <div>
@@ -102,6 +105,26 @@
                         isKeepPopup: bool,
                         params: {
                             content: 'test sign content'
+                        }
+                    })
+                    dom.innerText += `
+    Sign result: ${JSON.stringify(res)}                
+    `
+                } catch (error) {
+                    dom.innerText += `
+    Sign result: ${JSON.stringify(error)}                
+    `
+                }
+            }
+
+            // isKeepPopup: whether close the pop up
+            window.onEthSign = async (bool) => {
+                try {
+                    const res = await iota.request({
+                        method: 'eth_sign',
+                        isKeepPopup: bool,
+                        params: {
+                            content: 'test eth sign content'
                         }
                     })
                     dom.innerText += `
