@@ -71,7 +71,7 @@ const iotaSDK = {
         if (!iotaSDK.isTanglePay) {
             toInstall()
         }
-        method = method !== 'eth_sign' ? method : 'iota_sign'
+        method = !['eth_sign', 'personal_sign'].includes(method) ? method : 'iota_sign'
         return new Promise((resolve, reject) => {
             window[`iota_request_${method}`] = function (res, code) {
                 if (code === 200) {

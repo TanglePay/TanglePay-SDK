@@ -71,11 +71,14 @@
             <h4>iota_getPublicKey</h4>
             <button onclick="getPublicKey()" class="btn btn-primary">Get PublicKey</button>
 
-            <h4>eth_sign</h4>
-            <button onclick="onEthSign()" class="btn btn-primary">Eth Sign</button>
+            <h4>personal_sign</h4>
+            <button onclick="onEthPersonalSign()" class="btn btn-primary">Personal Sign</button>
 
             <h4>eth_getBalance</h4>
             <button onclick="getEthBalances()" class="btn btn-primary">Get Eth balances</button>
+
+            <h4>eth_sendTransaction</h4>
+            <button onclick="onEthSendTransaction()" class="btn btn-primary">Send Transaction</button>
         </div>
 
         <div>
@@ -118,13 +121,13 @@
             }
 
             // isKeepPopup: whether close the pop up
-            window.onEthSign = async (bool) => {
+            window.onEthPersonalSign = async (bool) => {
                 try {
                     const res = await iota.request({
-                        method: 'eth_sign',
+                        method: 'personal_sign',
                         isKeepPopup: bool,
                         params: {
-                            content: 'test eth sign content'
+                            content: 'test personal sign content'
                         }
                     })
                     dom.innerText += `
@@ -190,7 +193,7 @@
                         method: 'iota_getBalance',
                         isKeepPopup: bool,
                         params: {
-                            assetsList: ['iota'], // ['iota','soonaverse','smr','asmb']
+                            assetsList: ['iota', 'smr'], // ['iota','soonaverse','smr','asmb']
                             addressList
                         }
                     })
@@ -215,6 +218,39 @@
                             to: 'iota1qqczmjuqnpmtpf8fvcct985u6um08d9tzjcuduf04hsu5sjp0tt0q5ek3s9',
                             value: 1,
                             data: 'test'
+                        }
+                    })
+
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(res)}                
+    `
+                    return res
+                } catch (error) {
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(error)}                
+    `
+                    return error
+                }
+            }
+
+            window.onEthSendTransaction = async () => {
+                try {
+                    // bsc
+                    // const res = await iota.request({
+                    //     method: 'eth_sendTransaction',
+                    //     params: {
+                    //         to: '0x55d398326f99059ff775485246999027b3197955',
+                    //         value: 1000000000000000
+                    //     }
+                    // })
+
+                    // usdt
+                    const res = await iota.request({
+                        method: 'eth_sendTransaction',
+                        params: {
+                            to: '0x55d398326f99059ff775485246999027b3197955',
+                            value: 1000000000000000,
+                            data: '0xa9059cbb0000000000000000000000003d6448479f92b0a3506e425f77c6482bc75f1092000000000000000000000000000000000000000000000000016345785d8a0000'
                         }
                     })
 
@@ -315,10 +351,10 @@
                 // window.getOne()
             }
             iota.on('accountsChanged', changeAccountHandler)
-            setTimeout(() => {
-                iota.removeListener('accountsChanged', changeAccountHandler)
-                iota.removeAllListener('accountsChanged')
-            }, 1000)
+            // setTimeout(() => {
+            //     iota.removeListener('accountsChanged', changeAccountHandler)
+            //     iota.removeAllListener('accountsChanged')
+            // }, 1000)
 
             window.getOne()
         })
