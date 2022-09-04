@@ -78,14 +78,10 @@
             <button onclick="getEthBalances()" class="btn btn-primary">Get Eth balances</button>
 
             <h4>eth_sendTransaction</h4>
-            <button onclick="onEthSendTransaction()" class="btn btn-primary">Send Transaction</button>
+            <button onclick="onEthSendTransaction()" class="btn btn-primary">ETH Send Transaction</button>
         </div>
 
         <div>
-            <h2>High level examples</h2>
-            Get address and balance in one click
-            <br />
-            <button onclick="getOne()" class="btn btn-primary">Connect</button>
             <div id="text"></div>
         </div>
     </body>
@@ -147,7 +143,7 @@
                         method: 'iota_connect',
                         isKeepPopup: bool,
                         params: {
-                            expires: 30000
+                            // expires: 3000000
                         }
                     })
                     dom.innerText += `
@@ -162,11 +158,10 @@
                 }
             }
 
-            window.onGetAccounts = async (bool) => {
+            window.onGetAccounts = async () => {
                 try {
                     const res = await iota.request({
-                        method: 'iota_accounts',
-                        isKeepPopup: bool
+                        method: 'iota_accounts'
                     })
                     window.addressList = res
                     dom.innerText += `
@@ -180,23 +175,26 @@
                 }
             }
 
-            window.getBalances = async (bool, addressList) => {
-                addressList = addressList || window?.addressList
-                if (!addressList?.length) {
-                    dom.innerText += `
-    Please get accounts first.
-    `
-                    return
-                }
+            window.getBalances = async (addressList) => {
                 try {
+                    // iota balance
                     const res = await iota.request({
                         method: 'iota_getBalance',
-                        isKeepPopup: bool,
                         params: {
                             assetsList: ['iota', 'smr'], // ['iota','soonaverse','smr','asmb']
-                            addressList
+                            // addressList:addressList,
+                            addressList: [] // current addressList
                         }
                     })
+                    // shimmer balance
+                    // const res = await iota.request({
+                    //     method: 'iota_getBalance',
+                    //     params: {
+                    //     assetsList: ['smr'], // ['smr']
+                    //         // addressList:addressList,
+                    //         addressList: [] // current addressList
+                    //     }
+                    // })
 
                     dom.innerText += `
     Get balance result: ${JSON.stringify(res)}                
@@ -287,21 +285,14 @@
                 }
             }
 
-            window.getEthBalances = async (bool, addressList) => {
-                addressList = addressList || window?.addressList
-                if (!addressList?.length) {
-                    dom.innerText += `
-    Please get accounts first.
-    `
-                    return
-                }
+            window.getEthBalances = async (addressList) => {
                 try {
                     const res = await iota.request({
                         method: 'eth_getBalance',
-                        isKeepPopup: bool,
                         params: {
-                            assetsList: ['evm'], // ['evm']
-                            addressList
+                            assetsList: ['evm', 'soonaverse'], // ['evm','soonaverse']
+                            // addressList:addressList,
+                            addressList: [] // current addressList
                         }
                     })
 
@@ -322,7 +313,8 @@
                     const res = await iota.request({
                         method: 'iota_getPublicKey',
                         isKeepPopup: true,
-                        params: {}
+                        params: {} // current address
+                        // params: { address: 'rms1qzthtcqc8e204naua69cly4csc98cweycw77044s6n3jgvf75kluz5ms6wn' }
                     })
                     dom.innerText += `
     Get publicKey result: ${JSON.stringify(res)}                
@@ -336,19 +328,12 @@
                 }
             }
 
-            window.getOne = async () => {
-                await window.onConnect(true)
-                const res1 = await window.onGetAccounts(true)
-                const res2 = await window.getBalances(true, res1)
-                const res3 = await window.getEthBalances(false, res1)
-            }
-
             const changeAccountHandler = (e) => {
                 const { address } = e
                 dom.innerText += `
     Switch account event: ${JSON.stringify(e)}                
     `
-                // window.getOne()
+                // window.onConnect()
             }
             iota.on('accountsChanged', changeAccountHandler)
             // setTimeout(() => {
@@ -356,7 +341,7 @@
             //     iota.removeAllListener('accountsChanged')
             // }, 1000)
 
-            window.getOne()
+            window.onConnect()
         })
     </script>
 </html>
