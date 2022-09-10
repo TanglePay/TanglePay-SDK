@@ -2,7 +2,7 @@
 const sendToContentScript = (params) => {
     params.cmd = `injectToContent##${params.cmd}`
     params.origin = window.location.origin
-    // params:{cmd,origin,data,isKeepPopup}
+    // params:{cmd,origin,data}
     if (window.TanglePayEnv === 'app') {
         window.ReactNativeWebView.postMessage(JSON.stringify(params))
     } else {
@@ -29,7 +29,7 @@ window.addEventListener(
                 break
             case 'iota_event':
                 {
-                    const list = window.iota_events[`${cmd}_${data.method}`]
+                    const list = window.iota_events[`${cmd}_${data.method}`] || []
                     list.forEach((e) => {
                         e.handler && e.handler(data.response, code)
                     })
@@ -67,7 +67,7 @@ const toInstall = () => {
 const iotaSDK = {
     isTanglePay: false,
     tanglePayVersion: '',
-    request: async ({ method, isKeepPopup, params }) => {
+    request: async ({ method, params }) => {
         if (!iotaSDK.isTanglePay) {
             toInstall()
         }
@@ -87,8 +87,7 @@ const iotaSDK = {
             }
             sendToContentScript({
                 cmd: 'iota_request',
-                data: { method, params },
-                isKeepPopup
+                data: { method, params }
             })
         })
     },

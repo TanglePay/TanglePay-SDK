@@ -96,12 +96,10 @@
             Version: ${iota.tanglePayVersion || '--'}
         `
 
-            // isKeepPopup: whether close the pop up
             window.onSign = async (bool) => {
                 try {
                     const res = await iota.request({
                         method: 'iota_sign',
-                        isKeepPopup: bool,
                         params: {
                             content: 'test sign content'
                         }
@@ -116,12 +114,10 @@
                 }
             }
 
-            // isKeepPopup: whether close the pop up
             window.onEthPersonalSign = async (bool) => {
                 try {
                     const res = await iota.request({
                         method: 'personal_sign',
-                        isKeepPopup: bool,
                         params: {
                             content: 'test personal sign content'
                         }
@@ -141,7 +137,6 @@
                 try {
                     const res = await iota.request({
                         method: 'iota_connect',
-                        isKeepPopup: bool,
                         params: {
                             // expires: 3000000
                         }
@@ -213,7 +208,7 @@
                     const res = await iota.request({
                         method: 'iota_sendTransaction',
                         params: {
-                            to: 'iota1qqczmjuqnpmtpf8fvcct985u6um08d9tzjcuduf04hsu5sjp0tt0q5ek3s9',
+                            to: 'iota1qzrhx0ey6w4a9x0xg3zxagq2ufrw45qv8nlv24tkpxeetk864a4rkewh7e5',
                             value: 1,
                             data: 'test'
                         }
@@ -312,7 +307,6 @@
                 try {
                     const res = await iota.request({
                         method: 'iota_getPublicKey',
-                        isKeepPopup: true,
                         params: {} // current address
                         // params: { address: 'rms1qzthtcqc8e204naua69cly4csc98cweycw77044s6n3jgvf75kluz5ms6wn' }
                     })
