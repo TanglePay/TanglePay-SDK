@@ -3,7 +3,7 @@
 This repostiory contains Javascript/Typescript SDK for DApps in `IOTA` ecosystem to interact with TanglePay wallets.
 
 You may find the following instructions familiar if you are already an experience DApp developer with Etherum, Metamask.
-For more details, please refer to the specification below or the [Demo](https://tanglepay.github.io/TanglePay-Sdk/).
+For more details, please refer to the specification below or the [Demo](https://tanglepay.github.io/TanglePay-SDK/).
 
 ## Architecture
 
@@ -342,27 +342,39 @@ If you can't retrieve the user's account(s), you should encourage the user to in
 
 ##### Returns
 
-The id of the block created and the contructed block.
+```json
+{
+    "Data": {
+        "TransactionId": "<transaciton id>"
+    }
+}
+```
 
 ##### Parameters
 
-```javascript
-// token
-params: {
-          to: 'evm_address',
-          value: 1000000000000000,
-          unit:'', // default:wei
+```json
+{
+    "from": "<from>",
+    "to": "<to>",
+    "gas": "<gas>",
+    "gasPrice": "<gasPrice>",
+    "value": "<value>",
+    "tags": [],
+    "metadata": "<metadata>",
+    "data": "<data>"
 }
-// contract
-params: {
-          to: 'evm_address',
-          value: 1000000000000000,
-          unit:'', // default:wei
-          data: '0xa9059cbb0000000000000000000000003d6448479f92b0a3506e425f77c6482bc75f1092000000000000000000000000000000000000000000000000016345785d8a0000' // transaction.encodeABI()
-        }
 ```
 
-Send a transfer from the balance.
+Create value transfer transactions given the following parameters.
+
+-   `from`: (optional) if not specified, the wallet will select all available UTXOs from current wallet.
+-   `to`: address of bech32 format.
+-   `gas`: (optional) zero or optional for L1 networks.
+-   `gasPrice`: (optional) zero or optional for L1 networks.
+-   `value`: integer of the value to be transfered.
+-   `tags`: (optional) additional tags to be sent with the transactions, only applicable for networks with Stardust upgrade.
+-   `metadata`: (optional) additional metadata to be sent with the transactions, only applicable for networks with Stardust upgrade.
+-   `data`: (optional): The compiled code of a contract.
 
 ##### Description
 
