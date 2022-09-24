@@ -1,6 +1,6 @@
 {
     "name": "tanglepay-sdk",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "DApp SDK to interact with TanglePay wallets",
     "main": "dist/index.js",
     "scripts": {
