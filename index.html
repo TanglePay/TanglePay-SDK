@@ -161,14 +161,34 @@
                         <input id="iota_address" type="text" placeholder="send to ( address ) ">
                         <input id="iota_amount" type="number" placeholder="amount">
                         <input id="iota_data" placeholder="data">
+                        <input id="iota_unit" placeholder="unit (Optional)" value="Mi">
                     </div>
                     <button onclick="sendTransaction()" class="btn btn-primary">Send Transaction</button>
                 </div>
-
+                <div class="block">
+                    <h4>shimmer_sendTransaction</h4>
+                    <div class="address-input">
+                        <input id="shimmer_address" type="text" placeholder="send to ( address ) ">
+                        <input id="shimmer_amount" type="number" placeholder="amount">
+                        <input id="shimmer_data" placeholder="data">
+                        <input id="shimmer_unit" placeholder="unit (Optional)" value="SMR">
+                    </div>
+                    <button onclick="sendTransactionShimmer()" class="btn btn-primary">Send Transaction</button>
+                </div>
                 
             </div>
 
             <div class="middle">
+                <div class="block">
+                    <h4>shimmer_token_sendTransaction</h4>
+                    <div class="address-input">
+                        <input id="shimmer_token_address" type="text" placeholder="send to ( address ) ">
+                        <input id="shimmer_token_amount" type="number" placeholder="amount">
+                        <input id="shimmer_token_data" placeholder="data">
+                        <input id="shimmer_token_assetId" placeholder="assetId">
+                    </div>
+                    <button onclick="sendTransactionShimmerToken()" class="btn btn-primary">Send Transaction</button>
+                </div>
                 <div class="block">
                     <h4>iota_changeAccount</h4>
                     <div class="radio-con">
@@ -213,7 +233,19 @@
 
                 <div class="block">
                     <h4>eth_sendTransaction</h4>
+                    <div class="address-input">
+                        <input id="eth_address" type="text" placeholder="send to ( address ) ">
+                        <input id="eth_amount" type="number" placeholder="amount">
+                    </div>
                     <button onclick="onEthSendTransaction()" class="btn btn-primary">ETH Send Transaction</button>
+                </div>
+                <div class="block">
+                    <h4>eth_sendTransaction (contract)</h4>
+                    <div class="address-input">
+                        <input id="eth_contract_address" type="text" placeholder="send to ( address ) ">
+                        <input id="eth_contract_data" type="number" placeholder="data">
+                    </div>
+                    <button onclick="onEthSendContractTransaction()" class="btn btn-primary">ETH Send Transaction</button>
                 </div>
             </div>
 
@@ -384,6 +416,7 @@ Connect result: ${JSON.stringify(res)}
                 const address = document.getElementById('iota_address').value
                 const amount = document.getElementById('iota_amount').value
                 const data = document.getElementById('iota_data').value || ''
+                const unit = document.getElementById('iota_unit').value || ''
                 if(!address || !amount){
                     return 
                 }
@@ -393,7 +426,8 @@ Connect result: ${JSON.stringify(res)}
                         params: {
                             to: address,
                             value: parseFloat(amount),
-                            data
+                            data,
+                            unit
                         }
                     })
 
@@ -409,30 +443,108 @@ Connect result: ${JSON.stringify(res)}
                 }
             }
 
-            window.onEthSendTransaction = async () => {
-                // const address = document.getElementById('iota_address').value
-                // const amount = document.getElementById('iota_amount').value
-                // const data = document.getElementById('iota_data').value || ''
-                // if(!address || !amount){
-                //     return 
-                // }
+            window.sendTransactionShimmer = async () => {
+                const address = document.getElementById('shimmer_address').value
+                const amount = document.getElementById('shimmer_amount').value
+                const data = document.getElementById('shimmer_data').value || ''
+                const unit = document.getElementById('shimmer_unit').value || ''
+                if(!address || !amount){
+                    return 
+                }
                 try {
-                    // bsc
-                    // const res = await iota.request({
-                    //     method: 'eth_sendTransaction',
-                    //     params: {
-                    //         to: '0x55d398326f99059ff775485246999027b3197955',
-                    //         value: 1000000000000000
-                    //     }
-                    // })
+                    const res = await iota.request({
+                        method: 'iota_sendTransaction',
+                        params: {
+                            to: address,
+                            value: parseFloat(amount),
+                            data,
+                            unit
+                        }
+                    })
 
-                    // usdt
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(res)}                
+    `
+                    return res
+                } catch (error) {
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(error)}                
+    `
+                    return error
+                }
+            }
+
+            window.sendTransactionShimmerToken = async () => {
+                const address = document.getElementById('shimmer_token_address').value
+                const amount = document.getElementById('shimmer_token_amount').value
+                const data = document.getElementById('shimmer_token_data').value || ''
+                const assetId = document.getElementById('shimmer_token_assetId').value || ''
+                if(!address || !amount || !assetId){
+                    return 
+                }
+                try {
+                    const res = await iota.request({
+                        method: 'iota_sendTransaction',
+                        params: {
+                            to: address,
+                            value: parseFloat(amount),
+                            data,
+                            assetId
+                        }
+                    })
+
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(res)}                
+    `
+                    return res
+                } catch (error) {
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(error)}                
+    `
+                    return error
+                }
+            }
+
+            
+
+            window.onEthSendTransaction = async () => {
+                const address = document.getElementById('eth_address').value
+                const amount = document.getElementById('eth_amount').value
+                if(!address || !amount){
+                    return 
+                }
+                try {
                     const res = await iota.request({
                         method: 'eth_sendTransaction',
                         params: {
-                            to: '0x55d398326f99059ff775485246999027b3197955',
-                            value: 1000000000000000,
-                            data: '0xa9059cbb0000000000000000000000003d6448479f92b0a3506e425f77c6482bc75f1092000000000000000000000000000000000000000000000000016345785d8a0000'
+                            to:address,
+                            value: amount,
+                        }
+                    })
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(res)}                
+    `
+                    return res
+                } catch (error) {
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(error)}                
+    `
+                    return error
+                }
+            }
+
+            window.onEthSendContractTransaction = async () => {
+                const address = document.getElementById('eth_contract_address').value
+                const data = document.getElementById('eth_contract_data').value || ''
+                if(!address || !data){
+                    return 
+                }
+                try {
+                    const res = await iota.request({
+                        method: 'eth_sendTransaction',
+                        params: {
+                            to: address,
+                            data
                         }
                     })
 
