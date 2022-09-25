@@ -27,12 +27,66 @@
             crossorigin="anonymous"
         ></script>
         <style>
+            body {
+                padding: 20px;
+            }
             #text {
-                max-width: 70%;
-                word-wrap: break-word;
+                word-break: break-all;
             }
             h2 {
                 padding-top: 30px;
+            }
+            .block{
+                background: #f5f5f5;
+                border-radius: 10px;
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            .content {
+                display: flex;
+                align-items: flex-start;
+            }
+            .middle{
+                margin-left: 20px;
+                margin-top: 75px;
+            }
+            .right {
+                flex: 1;
+                padding: 0px 20px 20px 20px;
+                background: #f5f5f5;
+                border-radius: 10px;
+                margin-top: 75px;
+                margin-left: 20px;
+                box-sizing: border-box;
+            }
+            .radio-con{
+                margin-bottom: 5px;
+            }
+            .radio-con span{
+                margin-right: 10px;
+            }
+            .address-input input{
+                width: 300px;
+                margin-bottom: 10px;
+                display: block;
+            }
+            @media screen and (max-width: 768px) {
+                .content {
+                    flex-direction: column;
+                }
+                .middle{
+                    margin-top: 0;
+                    margin-left: 0;
+                }
+                .right {
+                    flex: 1;
+                    padding: 10px;
+                    background: #f5f5f5;
+                    border-radius: 10px;
+                    margin-top: 20px;
+                    margin-left: 0;
+                    box-sizing: border-box;
+                }
             }
         </style>
     </head>
@@ -47,42 +101,157 @@
         <h2>Wallet status</h2>
         <div id="status">Wallet not installed</div>
 
-        <div>
-            <h2>API examples</h2>
+        <div class="content">
+            <div class="left">
+                <h2>API examples</h2>
 
-            <h4>iota_connect</h4>
-            <button onclick="onConnect()" class="btn btn-primary">Connect</button>
+                <div class="block">
+                    <h4>iota_connect</h4>
+                    <button onclick="onConnect()" class="btn btn-primary">Connect</button>
+                </div>
 
-            <h4>iota_sign</h4>
-            <button onclick="onSign()" class="btn btn-primary">Sign</button>
+                <div class="block">
+                    <h4>iota_sign</h4>
+                    <div class="address-input">
+                        <input id="sign_data" type="text" placeholder="content">
+                    </div>
+                    <button onclick="onSign()" class="btn btn-primary">Sign</button>
+                </div>
 
-            <h4>iota_accounts</h4>
-            <button onclick="onGetAccounts()" class="btn btn-primary">Get accounts</button>
+                <div class="block">
+                    <h4>iota_accounts</h4>
+                    <button onclick="onGetAccounts()" class="btn btn-primary">Get accounts</button>
+                </div>
 
-            <h4>iota_getBalance</h4>
-            <button onclick="getBalances()" class="btn btn-primary">Get balances</button>
+                <div class="block">
+                    <h4>iota_getBalance</h4>
+                    <div class="radio-con">
+                        <span>
+                            <input type="checkbox" name="balance" value="iota">iota</input>
+                        </span>
+                        <span>
+                            <input type="checkbox" name="balance" value="soonaverse">soonaverse</input>
+                        </span>
+                        <span>
+                            <input type="checkbox" name="balance" value="smr">smr</input>
+                        </span>
+                        <span>
+                            <input type="checkbox" name="balance" value="asmb">asmb</input>
+                        </span>
+                    </div>
+                    <button onclick="getBalances()" class="btn btn-primary">Get balances</button>
+                </div>
 
-            <h4>iota_sendTransaction</h4>
-            <button onclick="sendTransaction()" class="btn btn-primary">Send Transaction</button>
+                <div class="block">
+                    <h4>iota_getBalance ( shimmer )</h4>
+                    <div class="radio-con">
+                        <!-- <span>
+                            <input type="checkbox" name="balance_shimmer" value="soonaverse">soonaverse</input>
+                        </span> -->
+                        <span>
+                            <input type="checkbox" name="balance_shimmer" value="smr">smr</input>
+                        </span>
+                    </div>
+                    <button onclick="getBalancesShimmer()" class="btn btn-primary">Get balances ( shimmer )</button>
+                </div>
 
-            <h4>iota_changeAccount</h4>
-            <button onclick="changeAccount()" class="btn btn-primary">Change Account</button>
+                <div class="block">
+                    <h4>iota_sendTransaction</h4>
+                    <div class="address-input">
+                        <input id="iota_address" type="text" placeholder="send to ( address ) ">
+                        <input id="iota_amount" type="number" placeholder="amount">
+                        <input id="iota_data" placeholder="data">
+                        <input id="iota_unit" placeholder="unit (Optional)" value="Mi">
+                    </div>
+                    <button onclick="sendTransaction()" class="btn btn-primary">Send Transaction</button>
+                </div>
+                <div class="block">
+                    <h4>shimmer_sendTransaction</h4>
+                    <div class="address-input">
+                        <input id="shimmer_address" type="text" placeholder="send to ( address ) ">
+                        <input id="shimmer_amount" type="number" placeholder="amount">
+                        <input id="shimmer_data" placeholder="data">
+                        <input id="shimmer_unit" placeholder="unit (Optional)" value="SMR">
+                    </div>
+                    <button onclick="sendTransactionShimmer()" class="btn btn-primary">Send Transaction</button>
+                </div>
+                
+            </div>
 
-            <h4>iota_getPublicKey</h4>
-            <button onclick="getPublicKey()" class="btn btn-primary">Get PublicKey</button>
+            <div class="middle">
+                <div class="block">
+                    <h4>shimmer_token_sendTransaction</h4>
+                    <div class="address-input">
+                        <input id="shimmer_token_address" type="text" placeholder="send to ( address ) ">
+                        <input id="shimmer_token_amount" type="number" placeholder="amount">
+                        <input id="shimmer_token_data" placeholder="data">
+                        <input id="shimmer_token_assetId" placeholder="assetId">
+                    </div>
+                    <button onclick="sendTransactionShimmerToken()" class="btn btn-primary">Send Transaction</button>
+                </div>
+                <div class="block">
+                    <h4>iota_changeAccount</h4>
+                    <div class="radio-con">
+                        <span>
+                            <input type="radio" name="changeAccount" value="mainnet">iota mainnet</input>
+                        </span>
+                        <span>
+                            <input type="radio" name="changeAccount" value="iota-evm">iota-evm</input>
+                        </span>
+                        <span>
+                            <input type="radio" name="changeAccount" value="bsc">bsc</input>
+                        </span>
+                    </div>
+                    <button onclick="changeAccount()" class="btn btn-primary">Change Account</button>
+                </div>
 
-            <h4>personal_sign</h4>
-            <button onclick="onEthPersonalSign()" class="btn btn-primary">Personal Sign</button>
+                <div class="block">
+                    <h4>iota_getPublicKey</h4>
+                    <button onclick="getPublicKey()" class="btn btn-primary">Get PublicKey</button>
+                </div>
 
-            <h4>eth_getBalance</h4>
-            <button onclick="getEthBalances()" class="btn btn-primary">Get Eth balances</button>
+                <div class="block">
+                    <h4>personal_sign</h4>
+                    <div class="address-input">
+                        <input id="sign_eth_data" type="text" placeholder="content">
+                    </div>
+                    <button onclick="onEthPersonalSign()" class="btn btn-primary">Personal Sign</button>
+                </div>
 
-            <h4>eth_sendTransaction</h4>
-            <button onclick="onEthSendTransaction()" class="btn btn-primary">ETH Send Transaction</button>
-        </div>
+                <div class="block">
+                    <h4>eth_getBalance</h4>
+                    <div class="radio-con">
+                        <span>
+                            <input type="checkbox" name="balance_eth" value="evm">evm</input>
+                        </span>
+                        <span>
+                            <input type="checkbox" name="balance_eth" value="soonaverse">soonaverse</input>
+                        </span>
+                    </div>
+                    <button onclick="getEthBalances()" class="btn btn-primary">Get Eth balances</button>
+                </div>
 
-        <div>
-            <div id="text"></div>
+                <div class="block">
+                    <h4>eth_sendTransaction</h4>
+                    <div class="address-input">
+                        <input id="eth_address" type="text" placeholder="send to ( address ) ">
+                        <input id="eth_amount" type="number" placeholder="amount">
+                    </div>
+                    <button onclick="onEthSendTransaction()" class="btn btn-primary">ETH Send Transaction</button>
+                </div>
+                <div class="block">
+                    <h4>eth_sendTransaction (contract)</h4>
+                    <div class="address-input">
+                        <input id="eth_contract_address" type="text" placeholder="send to ( address ) ">
+                        <input id="eth_contract_data" type="number" placeholder="data">
+                    </div>
+                    <button onclick="onEthSendContractTransaction()" class="btn btn-primary">ETH Send Transaction</button>
+                </div>
+            </div>
+
+            <div class="right">
+                <div id="text"></div>
+            </div>
         </div>
     </body>
     <script src="./dist/index.js"></script>
@@ -97,11 +266,15 @@
         `
 
             window.onSign = async (bool) => {
+                const content = document.getElementById('sign_data').value
+                if(!content){
+                    return;
+                }
                 try {
                     const res = await iota.request({
                         method: 'iota_sign',
                         params: {
-                            content: 'test sign content'
+                            content
                         }
                     })
                     dom.innerText += `
@@ -115,11 +288,15 @@
             }
 
             window.onEthPersonalSign = async (bool) => {
+                const content = document.getElementById('sign_eth_data').value
+                if(!content){
+                    return;
+                }
                 try {
                     const res = await iota.request({
                         method: 'personal_sign',
                         params: {
-                            content: 'test personal sign content'
+                            content
                         }
                     })
                     dom.innerText += `
@@ -142,7 +319,7 @@
                         }
                     })
                     dom.innerText += `
-    Connect result: ${JSON.stringify(res)}                
+Connect result: ${JSON.stringify(res)}                
     `
                     return res
                 } catch (error) {
@@ -171,46 +348,86 @@
             }
 
             window.getBalances = async (addressList) => {
-                try {
-                    // iota balance
-                    const res = await iota.request({
-                        method: 'iota_getBalance',
-                        params: {
-                            assetsList: ['iota', 'smr'], // ['iota','soonaverse','smr','asmb']
-                            // addressList:addressList,
-                            addressList: [] // current addressList
-                        }
-                    })
-                    // shimmer balance
-                    // const res = await iota.request({
-                    //     method: 'iota_getBalance',
-                    //     params: {
-                    //     assetsList: ['smr'], // ['smr']
-                    //         // addressList:addressList,
-                    //         addressList: [] // current addressList
-                    //     }
-                    // })
+                const balances = document.getElementsByName('balance')
+                const assetsList = [];
+                balances.forEach(e=>{
+                    if(e.checked){
+                        assetsList.push(e.value)
+                    }
+                })
+                if(assetsList.length){
+                    try {
+                        // iota balance
+                        const res = await iota.request({
+                            method: 'iota_getBalance',
+                            params: {
+                                assetsList, // ['iota','soonaverse','smr','asmb']
+                                // addressList:addressList,
+                                addressList: [] // current addressList
+                            }
+                        })
+                        dom.innerText += `
+        Get balance result: ${JSON.stringify(res)}                
+        `
+                        return res
+                    } catch (error) {
+                        dom.innerText += `
+        Get balance result: ${JSON.stringify(error)}                
+        `
+                        return error
+                    }
+                }
+            }
 
-                    dom.innerText += `
-    Get balance result: ${JSON.stringify(res)}                
-    `
-                    return res
-                } catch (error) {
-                    dom.innerText += `
-    Get balance result: ${JSON.stringify(error)}                
-    `
-                    return error
+            window.getBalancesShimmer = async (addressList) => {
+                const balances = document.getElementsByName('balance_shimmer')
+                const assetsList = [];
+                balances.forEach(e=>{
+                    if(e.checked){
+                        assetsList.push(e.value)
+                    }
+                })
+                if(assetsList.length){
+                    try {
+                        // shimmer balance
+                        const res = await iota.request({
+                            method: 'iota_getBalance',
+                            params: {
+                                assetsList, // ['smr']
+                                // addressList:addressList,
+                                addressList: [] // current addressList
+                            }
+                        })
+
+                        dom.innerText += `
+        Get balance(shimmer) result: ${JSON.stringify(res)}                
+        `
+                        return res
+                    } catch (error) {
+                        dom.innerText += `
+        Get balance(shimmer) result: ${JSON.stringify(error)}                
+        `
+                        return error
+                    }
                 }
             }
 
             window.sendTransaction = async () => {
+                const address = document.getElementById('iota_address').value
+                const amount = document.getElementById('iota_amount').value
+                const data = document.getElementById('iota_data').value || ''
+                const unit = document.getElementById('iota_unit').value || ''
+                if(!address || !amount){
+                    return 
+                }
                 try {
                     const res = await iota.request({
                         method: 'iota_sendTransaction',
                         params: {
-                            to: 'iota1qzrhx0ey6w4a9x0xg3zxagq2ufrw45qv8nlv24tkpxeetk864a4rkewh7e5',
-                            value: 1,
-                            data: 'test'
+                            to: address,
+                            value: parseFloat(amount),
+                            data,
+                            unit
                         }
                     })
 
@@ -226,24 +443,108 @@
                 }
             }
 
-            window.onEthSendTransaction = async () => {
+            window.sendTransactionShimmer = async () => {
+                const address = document.getElementById('shimmer_address').value
+                const amount = document.getElementById('shimmer_amount').value
+                const data = document.getElementById('shimmer_data').value || ''
+                const unit = document.getElementById('shimmer_unit').value || ''
+                if(!address || !amount){
+                    return 
+                }
                 try {
-                    // bsc
-                    // const res = await iota.request({
-                    //     method: 'eth_sendTransaction',
-                    //     params: {
-                    //         to: '0x55d398326f99059ff775485246999027b3197955',
-                    //         value: 1000000000000000
-                    //     }
-                    // })
+                    const res = await iota.request({
+                        method: 'iota_sendTransaction',
+                        params: {
+                            to: address,
+                            value: parseFloat(amount),
+                            data,
+                            unit
+                        }
+                    })
 
-                    // usdt
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(res)}                
+    `
+                    return res
+                } catch (error) {
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(error)}                
+    `
+                    return error
+                }
+            }
+
+            window.sendTransactionShimmerToken = async () => {
+                const address = document.getElementById('shimmer_token_address').value
+                const amount = document.getElementById('shimmer_token_amount').value
+                const data = document.getElementById('shimmer_token_data').value || ''
+                const assetId = document.getElementById('shimmer_token_assetId').value || ''
+                if(!address || !amount || !assetId){
+                    return 
+                }
+                try {
+                    const res = await iota.request({
+                        method: 'iota_sendTransaction',
+                        params: {
+                            to: address,
+                            value: parseFloat(amount),
+                            data,
+                            assetId
+                        }
+                    })
+
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(res)}                
+    `
+                    return res
+                } catch (error) {
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(error)}                
+    `
+                    return error
+                }
+            }
+
+            
+
+            window.onEthSendTransaction = async () => {
+                const address = document.getElementById('eth_address').value
+                const amount = document.getElementById('eth_amount').value
+                if(!address || !amount){
+                    return 
+                }
+                try {
                     const res = await iota.request({
                         method: 'eth_sendTransaction',
                         params: {
-                            to: '0x55d398326f99059ff775485246999027b3197955',
-                            value: 1000000000000000,
-                            data: '0xa9059cbb0000000000000000000000003d6448479f92b0a3506e425f77c6482bc75f1092000000000000000000000000000000000000000000000000016345785d8a0000'
+                            to:address,
+                            value: amount,
+                        }
+                    })
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(res)}                
+    `
+                    return res
+                } catch (error) {
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(error)}                
+    `
+                    return error
+                }
+            }
+
+            window.onEthSendContractTransaction = async () => {
+                const address = document.getElementById('eth_contract_address').value
+                const data = document.getElementById('eth_contract_data').value || ''
+                if(!address || !data){
+                    return 
+                }
+                try {
+                    const res = await iota.request({
+                        method: 'eth_sendTransaction',
+                        params: {
+                            to: address,
+                            data
                         }
                     })
 
@@ -260,11 +561,21 @@
             }
 
             window.changeAccount = async () => {
+                const networks = document.getElementsByName('changeAccount')
+                const networkList = [];
+                networks.forEach(e=>{
+                    if(e.checked){
+                        networkList.push(e.value)
+                    }
+                })
+                if(networkList.length<=0){
+                    return
+                }
                 try {
                     const res = await iota.request({
                         method: 'iota_changeAccount',
                         params: {
-                            network: 'bsc' //mainnet ,iota-evm
+                            network: networkList[0] //mainnet ,iota-evm
                         }
                     })
 
@@ -281,11 +592,21 @@
             }
 
             window.getEthBalances = async (addressList) => {
+                const balances = document.getElementsByName('balance_eth')
+                const assetsList = [];
+                balances.forEach(e=>{
+                    if(e.checked){
+                        assetsList.push(e.value)
+                    }
+                })
+                if(assetsList.length<=0){
+                    return;
+                }
                 try {
                     const res = await iota.request({
                         method: 'eth_getBalance',
                         params: {
-                            assetsList: ['evm', 'soonaverse'], // ['evm','soonaverse']
+                            assetsList, // ['evm','soonaverse']
                             // addressList:addressList,
                             addressList: [] // current addressList
                         }
