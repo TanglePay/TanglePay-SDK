@@ -170,6 +170,7 @@
                     <div class="address-input">
                         <input id="shimmer_address" type="text" placeholder="send to ( address ) ">
                         <input id="shimmer_amount" type="number" placeholder="amount">
+                        <input id="shimmer_tag" placeholder="tag">
                         <input id="shimmer_data" placeholder="data">
                         <input id="shimmer_unit" placeholder="unit (Optional)" value="SMR">
                     </div>
@@ -447,6 +448,7 @@ Connect result: ${JSON.stringify(res)}
                 const address = document.getElementById('shimmer_address').value
                 const amount = document.getElementById('shimmer_amount').value
                 const data = document.getElementById('shimmer_data').value || ''
+                const tag = document.getElementById('shimmer_tag').value || ''
                 const unit = document.getElementById('shimmer_unit').value || ''
                 if(!address || !amount){
                     return 
@@ -458,7 +460,8 @@ Connect result: ${JSON.stringify(res)}
                             to: address,
                             value: parseFloat(amount),
                             data,
-                            unit
+                            unit,
+                            tag
                         }
                     })
 
