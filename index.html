@@ -185,6 +185,7 @@
                     <div class="address-input">
                         <input id="shimmer_token_address" type="text" placeholder="send to ( address ) ">
                         <input id="shimmer_token_amount" type="number" placeholder="amount">
+                        <input id="shimmer_token_tag" placeholder="tag">
                         <input id="shimmer_token_data" placeholder="data">
                         <input id="shimmer_token_assetId" placeholder="assetId">
                     </div>
@@ -481,6 +482,7 @@ Connect result: ${JSON.stringify(res)}
                 const address = document.getElementById('shimmer_token_address').value
                 const amount = document.getElementById('shimmer_token_amount').value
                 const data = document.getElementById('shimmer_token_data').value || ''
+                const tag = document.getElementById('shimmer_token_tag').value || ''
                 const assetId = document.getElementById('shimmer_token_assetId').value || ''
                 if(!address || !amount || !assetId){
                     return 
@@ -492,7 +494,8 @@ Connect result: ${JSON.stringify(res)}
                             to: address,
                             value: parseFloat(amount),
                             data,
-                            assetId
+                            assetId,
+                            tag
                         }
                     })
 
