@@ -44,7 +44,7 @@ window.addEventListener(
 
 window.iota_events = {}
 // to install
-const toInstall = () => {
+const toInstall = (redirectAppStoreIfNotInstalled) => {
     const agents = new Array('Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod')
     const userAgentInfo = navigator.userAgent
     let isPc = true
@@ -55,21 +55,25 @@ const toInstall = () => {
         }
     }
     if (isPc) {
-        window.open(
-            'https://chrome.google.com/webstore/detail/tanglepay-iota-wallet/hbneiaclpaaglopiogfdhgccebncnjmc?hl=en-US',
-            'TanglePay-Extension'
-        )
+        if (redirectAppStoreIfNotInstalled) {
+            window.open(
+                'https://chrome.google.com/webstore/detail/tanglepay-iota-wallet/hbneiaclpaaglopiogfdhgccebncnjmc?hl=en-US',
+                'TanglePay-Extension'
+            )
+        }
     } else {
-        console.error('Browser not supported')
+        window.open('https://tanglepay.com/', 'TanglePay')
+        // console.error('Browser not supported')
     }
 }
 
 const iotaSDK = {
+    redirectAppStoreIfNotInstalled: false,
     isTanglePay: false,
     tanglePayVersion: '',
     request: async ({ method, params }) => {
         if (!iotaSDK.isTanglePay) {
-            toInstall()
+            toInstall(iotaSDK.redirectAppStoreIfNotInstalled)
         }
         method = !['eth_sign', 'personal_sign'].includes(method) ? method : 'iota_sign'
         return new Promise((resolve, reject) => {
@@ -152,7 +156,7 @@ const onLoad = () => {
         default:
             {
                 window.dispatchEvent(new CustomEvent('iota-ready'))
-                toInstall()
+                toInstall(iotaSDK.redirectAppStoreIfNotInstalled)
             }
             break
     }

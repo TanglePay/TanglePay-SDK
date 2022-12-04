@@ -192,6 +192,16 @@
                     <button onclick="sendTransactionShimmerToken()" class="btn btn-primary">Send Transaction</button>
                 </div>
                 <div class="block">
+                    <h4>shimmer_nft_sendTransaction</h4>
+                    <div class="address-input">
+                        <input id="shimmer_nft_address" type="text" placeholder="send to ( address ) ">
+                        <input id="shimmer_nft_tag" placeholder="tag">
+                        <input id="shimmer_nft_data" placeholder="data">
+                        <input id="shimmer_nft_assetId" placeholder="nftId">
+                    </div>
+                    <button onclick="sendTransactionShimmerNft()" class="btn btn-primary">Send Transaction</button>
+                </div>
+                <div class="block">
                     <h4>iota_changeAccount</h4>
                     <div class="radio-con">
                         <span>
@@ -260,9 +270,9 @@
     <script>
         const dom = document.getElementById('text')
         const status = document.getElementById('status')
-
+        const iota = window.iota
+        iota.redirectAppStoreIfNotInstalled = false ;
         window.addEventListener('iota-ready', () => {
-            const iota = window.iota
             status.innerText = `${iota?.isTanglePay ? 'TanglePay installed' : 'TanglePay not installed'}
             Version: ${iota.tanglePayVersion || '--'}
         `
@@ -511,7 +521,37 @@ Connect result: ${JSON.stringify(res)}
                 }
             }
 
-            
+            window.sendTransactionShimmerNft = async () => {
+                const address = document.getElementById('shimmer_nft_address').value
+                const data = document.getElementById('shimmer_nft_data').value || ''
+                const tag = document.getElementById('shimmer_nft_tag').value || ''
+                const nftId = document.getElementById('shimmer_nft_assetId').value || ''
+                if(!address || !nftId){
+                    return 
+                }
+                try {
+                    const res = await iota.request({
+                        method: 'iota_sendTransaction',
+                        params: {
+                            to: address,
+                            data,
+                            nftId,
+                            tag
+                        }
+                    })
+
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(res)}                
+    `
+                    return res
+                } catch (error) {
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(error)}                
+    `
+                    return error
+                }
+            }
+
 
             window.onEthSendTransaction = async () => {
                 const address = document.getElementById('eth_address').value
