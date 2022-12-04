@@ -65,6 +65,10 @@ if (typeof window.iota !== 'undefined') {
 
 `true` if the user has TanglePay installed.
 
+#### _iota.redirectAppStoreIfNotInstalled_
+
+`true` if the user does not have TanglePay installed, the app store will be opened.
+
 #### _iota.tanglePayVersion_
 
 `version` if the user has TanglePay installed.
