@@ -176,7 +176,7 @@
                     </div>
                     <button onclick="sendTransactionShimmer()" class="btn btn-primary">Send Transaction</button>
                 </div>
-                
+
             </div>
 
             <div class="middle">
@@ -266,11 +266,10 @@
             </div>
         </div>
     </body>
-    <script src="./dist/index.js"></script>
+    <script src="./dist/index.min.js"></script>
     <script>
         const dom = document.getElementById('text')
         const status = document.getElementById('status')
-        const iota = window.iota
         iota.redirectAppStoreIfNotInstalled = false ;
         window.addEventListener('iota-ready', () => {
             status.innerText = `${iota?.isTanglePay ? 'TanglePay installed' : 'TanglePay not installed'}
@@ -290,11 +289,11 @@
                         }
                     })
                     dom.innerText += `
-    Sign result: ${JSON.stringify(res)}                
+    Sign result: ${JSON.stringify(res)}
     `
                 } catch (error) {
                     dom.innerText += `
-    Sign result: ${JSON.stringify(error)}                
+    Sign result: ${JSON.stringify(error)}
     `
                 }
             }
@@ -312,11 +311,11 @@
                         }
                     })
                     dom.innerText += `
-    Sign result: ${JSON.stringify(res)}                
+    Sign result: ${JSON.stringify(res)}
     `
                 } catch (error) {
                     dom.innerText += `
-    Sign result: ${JSON.stringify(error)}                
+    Sign result: ${JSON.stringify(error)}
     `
                 }
             }
@@ -331,13 +330,13 @@
                         }
                     })
                     dom.innerText += `
-Connect result: ${JSON.stringify(res)}                
+Connect result: ${JSON.stringify(res)}
     `
                     return res
                 } catch (error) {
                     console.log(error, '----')
                     dom.innerText += `
-    Connect result: ${JSON.stringify(error)}                
+    Connect result: ${JSON.stringify(error)}
     `
                 }
             }
@@ -349,12 +348,12 @@ Connect result: ${JSON.stringify(res)}
                     })
                     window.addressList = res
                     dom.innerText += `
-    GetAccounts result: ${JSON.stringify(res)}                
+    GetAccounts result: ${JSON.stringify(res)}
     `
                     return res
                 } catch (error) {
                     dom.innerText += `
-    GetAccounts result: ${JSON.stringify(error)}                
+    GetAccounts result: ${JSON.stringify(error)}
     `
                 }
             }
@@ -379,12 +378,12 @@ Connect result: ${JSON.stringify(res)}
                             }
                         })
                         dom.innerText += `
-        Get balance result: ${JSON.stringify(res)}                
+        Get balance result: ${JSON.stringify(res)}
         `
                         return res
                     } catch (error) {
                         dom.innerText += `
-        Get balance result: ${JSON.stringify(error)}                
+        Get balance result: ${JSON.stringify(error)}
         `
                         return error
                     }
@@ -412,12 +411,12 @@ Connect result: ${JSON.stringify(res)}
                         })
 
                         dom.innerText += `
-        Get balance(shimmer) result: ${JSON.stringify(res)}                
+        Get balance(shimmer) result: ${JSON.stringify(res)}
         `
                         return res
                     } catch (error) {
                         dom.innerText += `
-        Get balance(shimmer) result: ${JSON.stringify(error)}                
+        Get balance(shimmer) result: ${JSON.stringify(error)}
         `
                         return error
                     }
@@ -430,7 +429,7 @@ Connect result: ${JSON.stringify(res)}
                 const data = document.getElementById('iota_data').value || ''
                 const unit = document.getElementById('iota_unit').value || ''
                 if(!address || !amount){
-                    return 
+                    return
                 }
                 try {
                     const res = await iota.request({
@@ -444,12 +443,12 @@ Connect result: ${JSON.stringify(res)}
                     })
 
                     dom.innerText += `
-    Send Transaction result: ${JSON.stringify(res)}                
+    Send Transaction result: ${JSON.stringify(res)}
     `
                     return res
                 } catch (error) {
                     dom.innerText += `
-    Send Transaction result: ${JSON.stringify(error)}                
+    Send Transaction result: ${JSON.stringify(error)}
     `
                     return error
                 }
@@ -462,7 +461,7 @@ Connect result: ${JSON.stringify(res)}
                 const tag = document.getElementById('shimmer_tag').value || ''
                 const unit = document.getElementById('shimmer_unit').value || ''
                 if(!address || !amount){
-                    return 
+                    return
                 }
                 try {
                     const res = await iota.request({
@@ -477,12 +476,12 @@ Connect result: ${JSON.stringify(res)}
                     })
 
                     dom.innerText += `
-    Send Transaction result: ${JSON.stringify(res)}                
+    Send Transaction result: ${JSON.stringify(res)}
     `
                     return res
                 } catch (error) {
                     dom.innerText += `
-    Send Transaction result: ${JSON.stringify(error)}                
+    Send Transaction result: ${JSON.stringify(error)}
     `
                     return error
                 }
@@ -495,7 +494,7 @@ Connect result: ${JSON.stringify(res)}
                 const tag = document.getElementById('shimmer_token_tag').value || ''
                 const assetId = document.getElementById('shimmer_token_assetId').value || ''
                 if(!address || !amount || !assetId){
-                    return 
+                    return
                 }
                 try {
                     const res = await iota.request({
@@ -510,12 +509,12 @@ Connect result: ${JSON.stringify(res)}
                     })
 
                     dom.innerText += `
-    Send Transaction result: ${JSON.stringify(res)}                
+    Send Transaction result: ${JSON.stringify(res)}
     `
                     return res
                 } catch (error) {
                     dom.innerText += `
-    Send Transaction result: ${JSON.stringify(error)}                
+    Send Transaction result: ${JSON.stringify(error)}
     `
                     return error
                 }
@@ -527,7 +526,7 @@ Connect result: ${JSON.stringify(res)}
                 const tag = document.getElementById('shimmer_nft_tag').value || ''
                 const nftId = document.getElementById('shimmer_nft_assetId').value || ''
                 if(!address || !nftId){
-                    return 
+                    return
                 }
                 try {
                     const res = await iota.request({
@@ -541,12 +540,12 @@ Connect result: ${JSON.stringify(res)}
                     })
 
                     dom.innerText += `
-    Send Transaction result: ${JSON.stringify(res)}                
+    Send Transaction result: ${JSON.stringify(res)}
     `
                     return res
                 } catch (error) {
                     dom.innerText += `
-    Send Transaction result: ${JSON.stringify(error)}                
+    Send Transaction result: ${JSON.stringify(error)}
     `
                     return error
                 }
@@ -557,7 +556,7 @@ Connect result: ${JSON.stringify(res)}
                 const address = document.getElementById('eth_address').value
                 const amount = document.getElementById('eth_amount').value
                 if(!address || !amount){
-                    return 
+                    return
                 }
                 try {
                     const res = await iota.request({
@@ -568,12 +567,12 @@ Connect result: ${JSON.stringify(res)}
                         }
                     })
                     dom.innerText += `
-    Send Transaction result: ${JSON.stringify(res)}                
+    Send Transaction result: ${JSON.stringify(res)}
     `
                     return res
                 } catch (error) {
                     dom.innerText += `
-    Send Transaction result: ${JSON.stringify(error)}                
+    Send Transaction result: ${JSON.stringify(error)}
     `
                     return error
                 }
@@ -583,7 +582,7 @@ Connect result: ${JSON.stringify(res)}
                 const address = document.getElementById('eth_contract_address').value
                 const data = document.getElementById('eth_contract_data').value || ''
                 if(!address || !data){
-                    return 
+                    return
                 }
                 try {
                     const res = await iota.request({
@@ -595,12 +594,12 @@ Connect result: ${JSON.stringify(res)}
                     })
 
                     dom.innerText += `
-    Send Transaction result: ${JSON.stringify(res)}                
+    Send Transaction result: ${JSON.stringify(res)}
     `
                     return res
                 } catch (error) {
                     dom.innerText += `
-    Send Transaction result: ${JSON.stringify(error)}                
+    Send Transaction result: ${JSON.stringify(error)}
     `
                     return error
                 }
@@ -626,12 +625,12 @@ Connect result: ${JSON.stringify(res)}
                     })
 
                     dom.innerText += `
-    Change Account result: ${JSON.stringify(res)}                
+    Change Account result: ${JSON.stringify(res)}
     `
                     return res
                 } catch (error) {
                     dom.innerText += `
-    Change Account result: ${JSON.stringify(error)}                
+    Change Account result: ${JSON.stringify(error)}
     `
                     return error
                 }
@@ -659,12 +658,12 @@ Connect result: ${JSON.stringify(res)}
                     })
 
                     dom.innerText += `
-    Get eth balance result: ${JSON.stringify(res)}                
+    Get eth balance result: ${JSON.stringify(res)}
     `
                     return res
                 } catch (error) {
                     dom.innerText += `
-    Get eth balance result: ${JSON.stringify(error)}                
+    Get eth balance result: ${JSON.stringify(error)}
     `
                     return error
                 }
@@ -678,12 +677,12 @@ Connect result: ${JSON.stringify(res)}
                         // params: { address: 'rms1qzthtcqc8e204naua69cly4csc98cweycw77044s6n3jgvf75kluz5ms6wn' }
                     })
                     dom.innerText += `
-    Get publicKey result: ${JSON.stringify(res)}                
+    Get publicKey result: ${JSON.stringify(res)}
     `
                     return res
                 } catch (error) {
                     dom.innerText += `
-    Get publicKey result: ${JSON.stringify(error)}                
+    Get publicKey result: ${JSON.stringify(error)}
     `
                     return error
                 }
@@ -692,7 +691,7 @@ Connect result: ${JSON.stringify(res)}
             const changeAccountHandler = (e) => {
                 const { address } = e
                 dom.innerText += `
-    Switch account event: ${JSON.stringify(e)}                
+    Switch account event: ${JSON.stringify(e)}
     `
                 // window.onConnect()
             }
