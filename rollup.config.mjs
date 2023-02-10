@@ -10,7 +10,6 @@ const moduleName = pkg.name.replace(/^@.*\//, "");
 const moduleNameIife = 'iota'; //moduleName.split('-').map(a=>a.charAt(0).toUpperCase()+a.slice(1)).join('')
 
 const inputFileName = "src/index.ts";
-const inputIifeFileName = "src/index-iife.ts";
 const author = pkg.author;
 const banner = `
   /**
@@ -21,10 +20,9 @@ const banner = `
    */
 `;
 export default [{
-    input: inputFileName, // 打包入口
+    input: inputFileName, // bundle entry point
     output: {
-        // 打包出口
-        file: pkg.module,
+        file: pkg.module, // output destination
         format: "es",
         name: moduleName,
         sourcemap: "inline",
@@ -35,21 +33,20 @@ export default [{
         ...Object.keys(pkg.devDependencies || {}),
     ],
     plugins: [
-        typescript(),// 解析TypeScript
-        commonjs(), // 将 CommonJS 转换成 ES2015 模块供 Rollup 处理
+        typescript(),// parse typeScript
+        commonjs(), // transform commonjs to ES2015 module for rollup to proceed
         babel({
             exclude: '**/node_modules/**',
             babelHelpers: "bundled"
         }),
-        resolve(), // 查找和打包node_modules中的第三方模块
-        terser(),
-        filesize(),
+        resolve(), // lookup and bundle third party packages
+        terser(), // compress
+        filesize(), // log size of output files to console
     ],
 },
     {
-        input: inputFileName, // 打包入口
+        input: inputFileName, // bundle entry point
         output: [{
-            // 打包出口
             file: pkg.browser,
             format: "iife",
             name: moduleNameIife,
@@ -58,14 +55,14 @@ export default [{
             extend: true
         }],
         plugins: [
-            typescript(),// 解析TypeScript
-            commonjs(), // 将 CommonJS 转换成 ES2015 模块供 Rollup 处理
+            typescript(), // parse typeScript
+            commonjs(), // transform commonjs to ES2015 module for rollup to proceed
             babel({
                 exclude: '**/node_modules/**',
                 babelHelpers: "bundled"
             }),
-            resolve(), // 查找和打包node_modules中的第三方模块
-            terser(),
-            filesize(),
+            resolve(), // lookup and bundle third party packages
+            terser(), // compress
+            filesize(), // log size of output files to console
         ],
     }];
