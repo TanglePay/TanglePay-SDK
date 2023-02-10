@@ -40,15 +40,27 @@ flowchart TB
 
 ## Getting started
 
-NPM package
+Package Bundlers
 
 `npm install tanglepay-sdk --save`
 
+`yarn add tanglepay-sdk`
+
+Standalone Browser Script
+
+`<script lang="javascript" src="https://cdn.com/tangle-pay/package/dist/index.min.js"></script>`  
+
 For any non-trivial IOTA web application — a.k.a. dapp, web3 site etc. — to work, you will have to:
 
--   Detect the IOTA provider (window.iota)
+-   Get reference to an IOTA SDK instance
 
 ```javascript
+// esm module
+import iota from 'tanglepay-sdk'
+```
+
+```javascript
+// browser iife script
 if (typeof window.iota !== 'undefined') {
     console.log('TanglePay is installed!')
 }
