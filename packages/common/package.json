@@ -1,0 +1,21 @@
+{
+  "name": "@tanglepaysdk/common",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.es.js",
+  "types": "dist/types/index.d.ts",
+  "type": "module",
+  "browser": "dist/index.min.js",
+  "module": "dist/index.es.js",
+  "moduleNameIife": "tanglePaySdkCommon",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build:type": "tsc",
+    "build:source": "rollup --config rollup.config.mjs",
+    "build": "npm run clean; npm run build:type; npm run build:source",
+    "lint": "eslint src --fix --ext .ts,.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {}
+}

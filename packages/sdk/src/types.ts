@@ -1,4 +1,3 @@
-
 export declare interface SendToScriptParam {
   cmd: string;
   origin?: string;
@@ -6,9 +5,6 @@ export declare interface SendToScriptParam {
 }
 export declare interface WindowSharedContext {
   TanglePayEnv?: string;
-  ReactNativeWebView?: {
-    postMessage(msg: string): void;
-  };
 }
 export declare type IotaResponse<T> = { address: string, nodeId: string } | T;
 
