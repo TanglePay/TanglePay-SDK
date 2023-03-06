@@ -1,7 +1,10 @@
+import {JsonRpcId} from "@tanglepaysdk/common";
+
 export declare interface SendToScriptParam {
   cmd: string;
   origin?: string;
   data?: any;
+  id: JsonRpcId;
 }
 export declare interface WindowSharedContext {
   TanglePayEnv?: string;

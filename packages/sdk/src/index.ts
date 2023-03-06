@@ -1,9 +1,9 @@
 
 import { toInstall } from './service';
-import { IotaEventCapsule, IotaResponse, SendToScriptParam, WindowSharedContext } from './types';
+import { IotaResponse, SendToScriptParam, WindowSharedContext } from './types';
 import { EventEmitter } from 'events';
-import { EventCallback, JsonRpcEngine, JsonRpcResponse, WindowPostStream } from '@tanglepaysdk/common';
-import iota from '../dist/types';
+import {EventCallback, JsonRpcEngine, JsonRpcId, JsonRpcResponse, WindowPostStream} from '@tanglepaysdk/common';
+
 // context objects
 const context:{ curTanglePayAddress?:string } = {};
 const iotaRequests: Record<string, EventCallback> = {};
@@ -13,34 +13,35 @@ const _stream = new WindowPostStream();
 const _rpcEngine = JsonRpcEngine
   .builder<SendToScriptParam, unknown>()
   .add(async (req, next)=>{
-    req.id = _seq++;
-    req.version = _rpcVersion;
+    req.id = _seq++
+    req.version = _rpcVersion
     req.params!.cmd = `injectToContent##${req.params!.cmd}`;
     req.params!.origin = window.location.origin;
+    req.params!.id = req.id
     return next!(req);
   })
   .add(async (req) => {
 
-    const { cmd, data } = req.params!;
+    const { cmd, data, id } = req.params!;
     _stream.write(req.params!);
-    if (cmd == 'iota_request') { // case request
+    if (cmd == 'injectToContent##iota_request') { // case request
       const { method } = data;
       return new Promise<JsonRpcResponse<unknown>>((resolve, reject)=>{
-        iotaRequests[`iota_request_${method}`] =  (res: IotaResponse<any>, code:number) => {
+        iotaRequests[`iota_request_${method}_${req.id??0}`] =  (res: IotaResponse<any>, code:number) => {
           if (code === 200) {
             // cache iota address
             if (method === 'iota_connect') {
               const address = res.address || '';
               context.curTanglePayAddress = address + '_' + res.nodeId;
             }
-            resolve({ id:req.id, version:100, data: res });
+            resolve({ id, version:100, data: res });
           } else {
             reject(res);
           }
         };
       });
     } else {
-      return { id:req.id, version:100, data: undefined };
+      return { id:req.id!, version:100, data: undefined };
     }
   })
   .build();
@@ -83,6 +84,7 @@ _stream.on('data', (data_?:any)=>{
   const cmd = (data_?.cmd || '').replace('contentToInject##', '');
   const data = data_?.data;
   const code = data_?.code;
+  const reqId = data_?.id;
   switch (cmd) {
     case 'getTanglePayInfo':
       IotaSDK.tanglePayVersion = data?.version;
@@ -90,7 +92,7 @@ _stream.on('data', (data_?:any)=>{
       break;
     case 'iota_request':
       {
-        const callBack = iotaRequests[`iota_request_${data.method}`];
+        const callBack = iotaRequests[`iota_request_${data.method}_${reqId??0}`];
         if (callBack) callBack(data.response, code);
       }
       break;
@@ -132,12 +134,7 @@ const onLoad = () => {
       {
         IotaSDK.isTanglePay = true;
         _stream.isMobile = env == 'app';
-        // get info
-        /*
-        sendToContentScript({
-          cmd: 'getTanglePayInfo',
-        });
-         */
+
         // @ts-ignore
         _rpcEngine.request({ params:{
           cmd: 'getTanglePayInfo',

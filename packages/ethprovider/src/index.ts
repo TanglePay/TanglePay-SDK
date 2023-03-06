@@ -1,30 +1,96 @@
 import { IEthereumProvider, RequestArguments } from './types';
 import { EventEmitter } from 'events';
 import iota from '@tanglepaysdk/core';
-import { JsonRpcEngine } from '@tanglepaysdk/common';
+import {JsonRpcEngine, JsonRpcRequest, JsonRpcRequestHandler, JsonRpcRequestMiddleware} from '@tanglepaysdk/common';
 
 class EthereumProvider extends EventEmitter implements IEthereumProvider {
 
   _version = 101;
 
-  _rpcEngine:JsonRpcEngine<RequestArguments, unknown>;
+  _rpcEngine:JsonRpcEngine<unknown[] | object, unknown>;
 
   _seq:number;
 
+  _selectedAddress?:string;
+
+  get isTanglePay(){
+      return true
+  }
+
+  get selectedAddress(){
+      return this._selectedAddress
+  }
   constructor() {
     super();
     this._seq = 1;
+    const log = (tag:string):JsonRpcRequestMiddleware<unknown[] | object, unknown> => async (req,next)=>{
+      console.log('req:'+tag,req)
+      const resp = await next!(req)
+      console.log('resp:'+tag,resp)
+      return resp
+    }
+
     this._rpcEngine = JsonRpcEngine
-      .builder<RequestArguments, unknown>()
+      .builder<unknown[] | object, unknown>()
+        .add(async (req,next)=>{
+            if (this._selectedAddress == undefined) {
+                try {
+                    const res = await iota.request({ method: 'iota_connect', params: {}}) as { address: string }
+                    if (res && res.address) {
+                        this._selectedAddress = res.address
+                    } else {
+                        throw new Error('not connected')
+                    }
+                } catch (e) {
+                    throw e;
+                }
+            }
+            return await next!(req)
+        })
+        .add(log('1'))
       .add(async (req, next)=>{
         req.id = this._seq++;
         req.version = this._version;
         return next!(req);
       })
-      .add(async (req) => {
+        .add(async (req,next)=>{
+          const methodMapping:Record<string, string> = {
+            'eth_requestAccounts':'iota_accounts',
+            'eth_connect':'iota_connect',
+          };
+          const requestMapping:Record<string, Function> = {
+              'eth_sign':(data:unknown)=> ({
+                  content:data
+              }),
+              'eth_sendTransaction': (arr:unknown[]) => {
+                  const pl = arr[0] as {value:string|number,data:any}
+                  pl.value = parseInt(pl.value as string)
+                  return pl
+              },
+              'eth_getBalance':()=>({assetsList : ['evm'], addressList:[]})
+          }
+            const noop = (data:any)=>data
+          const method = req.method!
+          const reqcp = {...req}
+            reqcp.method = methodMapping[method] ?? method
+            const reqTransform = requestMapping[method] ?? noop
+            reqcp.params = reqTransform(reqcp.params)
+          const resp = await next!(reqcp)
+
+          const responseMapping:Record<string, Function> = {
+            'eth_connect':(data:{address:string})=>[data.address],
+              'eth_getBalance':(data:{amount:number})=>data.amount
+          }
+          const respTransform = responseMapping[method] ?? noop;
+          const respcp = {...resp}
+          respcp.data = respTransform(resp.data)
+          return respcp
+        })
+        .add(log('2'))
+        .add(async (req) => {
         const { method, params, id } = req;
-        const resp = await iota.request({ method, params }) as any;
-        return { id, version:100, data: resp };
+        const resp = await iota.request({ method:method!, params }) as any;
+        return { id:id!, version:100, data: resp };
       })
       .build();
 
@@ -63,7 +129,6 @@ class EthereumProvider extends EventEmitter implements IEthereumProvider {
   }
 
   async request(args: RequestArguments): Promise<unknown> {
-    // @ts-ignore
     const resp = await this._rpcEngine.request(args);
     if (resp.error) {
       throw resp.error;

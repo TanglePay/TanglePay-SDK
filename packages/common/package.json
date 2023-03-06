@@ -7,15 +7,19 @@
   "type": "module",
   "browser": "dist/index.min.js",
   "module": "dist/index.es.js",
-  "moduleNameIife": "tanglePaySdkCommon",
+  "moduleNameIife": "TanglePaySdkCommon",
   "scripts": {
     "clean": "rimraf dist",
     "build:type": "tsc",
     "build:source": "rollup --config rollup.config.mjs",
     "build": "npm run clean; npm run build:type; npm run build:source",
-    "lint": "eslint src --fix --ext .ts,.js"
+    "lint": "eslint src --fix --ext .ts,.js",
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {}
+  "devDependencies": {},
+  "dependencies": {
+    "web3": "^1.8.2"
+  }
 }

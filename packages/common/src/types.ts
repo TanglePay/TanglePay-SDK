@@ -22,8 +22,8 @@ export interface JsonRpcResponse<T>  {
   error?:JsonRpcError;
 }
 
-export type JsonRpcRequestHandler<T, U> = (req: JsonRpcRequest<T>) => Promise<JsonRpcResponse<U>>;
-export type JsonRpcRequestMiddleware<T, U> = (req: JsonRpcRequest<T>, next?: JsonRpcRequestHandler<T, U>) => Promise<JsonRpcResponse<U>>;
+export type JsonRpcRequestHandler<T, U> = (req: Partial<JsonRpcRequest<T>>) => Promise<JsonRpcResponse<U>>;
+export type JsonRpcRequestMiddleware<T, U> = (req: Partial<JsonRpcRequest<T>>, next?: JsonRpcRequestHandler<T, U>) => Promise<JsonRpcResponse<U>>;
 
 export type EventCallback = (...args:any[]) => void;
 

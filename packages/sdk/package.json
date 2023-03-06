@@ -33,5 +33,7 @@
     "homepage": "https://github.com/TanglePay/TanglePay-SDK#readme",
     "devDependencies": {
     },
-    "dependencies": {}
+    "dependencies": {
+        "@tanglepaysdk/common": "^0.0.1"
+    }
 }
