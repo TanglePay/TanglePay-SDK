@@ -93,7 +93,7 @@
     </head>
 
     <body>
-        <h2>TanglePay-SDK-EthereumProvider</h2>
+        <h2>TanglePay-SDK-EthereumProvider v1.0.1</h2>
         Hi, this is the demo site of TanglePay-SDK-EthereumProvider
         <br />
         For more details, please refer to the spec
@@ -128,7 +128,7 @@
                     </div>
                     <button onclick="onEthPersonalSign()" class="btn btn-primary">Personal Sign</button>
                 </div>
-                
+
                 <div class="block">
                     <h4>eth_requestAccounts</h4>
                     <button onclick="onGetAccounts()" class="btn btn-primary">Get Accounts</button>
@@ -176,6 +176,7 @@
     ${method} result: ${JSON.stringify(res)}
     `
                 } catch (error) {
+                    alert(error)
                     dom.innerText += `
     ${method} error: ${JSON.stringify(error)}
     `
@@ -233,18 +234,14 @@
             }
 
             window.onGetAccounts = async () => {
-                try {
+
+                await exec(async ()=>{
                     const res = await web3.eth.requestAccounts()
+                    alert(JSON.stringify(res))
                     window.addressList = res
-                    dom.innerText += `
-    GetAccounts result: ${JSON.stringify(res)}
-    `
                     return res
-                } catch (error) {
-                    dom.innerText += `
-    GetAccounts result error: ${JSON.stringify(error)}
-    `
-                }
+                }, 'Get Account')
+
             }
 
 

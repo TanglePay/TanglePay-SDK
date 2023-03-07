@@ -62,6 +62,9 @@ class EthereumProvider extends EventEmitter implements IEthereumProvider {
               'eth_sign':(data:unknown)=> ({
                   content:data
               }),
+              'personal_sign':(data:unknown)=> ({
+                  content:data
+              }),
               'eth_sendTransaction': (arr:unknown[]) => {
                   const pl = arr[0] as {value:string|number,data:any}
                   pl.value = parseInt(pl.value as string)
