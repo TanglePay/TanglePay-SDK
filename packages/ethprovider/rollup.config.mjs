@@ -1,3 +1,4 @@
-import createRollupConfig from "../../rollup.config.mjs";
+import {createRollupConfig} from "../../rollup.config.mjs";
 import pkg from './package.json' assert { type: "json" }
-export default createRollupConfig(pkg)
+const config =  createRollupConfig(pkg)
+export default config

@@ -7,8 +7,16 @@ import nodePolyfills from 'rollup-plugin-polyfill-node';
 import filesize from 'rollup-plugin-filesize'
 
 
-
-export default function createRollupConfig(pkg) {
+export function decoratePlugin(config,plug,isFront = false){
+    config.forEach((c)=>{
+        if (isFront) {
+            c.plugins.unshift(plug);
+        } else {
+            c.plugins.push(plug);
+        }
+    })
+}
+export function createRollupConfig(pkg) {
     const moduleName = pkg.name;
     const moduleNameIife = pkg.moduleNameIife;
     const inputFileName = "src/index.ts";

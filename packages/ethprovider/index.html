@@ -93,7 +93,7 @@
     </head>
 
     <body>
-        <h2>TanglePay-SDK-EthereumProvider v1.0.1</h2>
+        <h2>TanglePay-SDK-EthereumProvider v1.0.2</h2>
         Hi, this is the demo site of TanglePay-SDK-EthereumProvider
         <br />
         For more details, please refer to the spec
@@ -215,16 +215,6 @@
     `
                         return res
                     }
-                    /*
-                    const res = await iota.request({
-                        method: 'iota_connect',
-                        params: {
-                            // expires: 3000000
-                        }
-                    })
-
-                     */
-
                 } catch (error) {
                     console.log(error, '----')
                     dom.innerText += `
@@ -322,8 +312,12 @@
     `
                 // window.onConnect()
             }
-            window.onGetAccounts()
-            //iota.on('accountsChanged', changeAccountHandler)
+
+            (async () => {
+                await window.onConnect();
+                await window.onGetAccounts();
+                await window.ethereum.setupIotaClient()
+            })()
         })();
     </script>
 </html>

@@ -1,0 +1,47 @@
+{
+  "name": "@tanglepaysdk/l12l2",
+  "version": "0.0.1",
+  "description": "iota shimmer l1 to l2 demo",
+  "main": "dist/index.es.js",
+  "types": "dist/types/index.d.ts",
+  "type": "module",
+  "browser": "dist/index.min.js",
+  "module": "dist/index.es.js",
+  "moduleNameIife": "l12l2",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build:type": "tsc",
+    "build:source": "rollup --config rollup.config.mjs",
+    "build": "npm run clean; npm run build:type; npm run build:source",
+    "lint": "eslint src --fix --ext .ts,.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TanglePay/TanglePay-SDK.git"
+  },
+  "keywords": [
+    "l12l2",
+    "TanglePay",
+    "Dapp",
+    "Iota",
+    "wallet"
+  ],
+  "author": "TanglePay",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/TanglePay/TanglePay-SDK/issues"
+  },
+  "homepage": "https://github.com/TanglePay/TanglePay-SDK#readme",
+  "devDependencies": {
+    "@iota/types": "^2.0.0-rc.2"
+  },
+  "dependencies": {
+    "@iota/client-wasm": "^1.0.0-alpha.2",
+    "@iota/util.js": "^1.9.0-stardust.5",
+    "@tanglepaysdk/common": "^0.0.1",
+    "@tanglepaysdk/core": "^0.0.8",
+    "big-integer": "^1.6.51",
+    "big-number": "^2.0.0",
+    "text-encoding-polyfill": "^0.6.7"
+  }
+}

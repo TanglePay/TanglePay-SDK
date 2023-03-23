@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"
+        ></script>
+        <style>
+            body {
+                padding: 20px;
+            }
+            #text {
+                word-break: break-all;
+            }
+            h2 {
+                padding-top: 30px;
+            }
+            .block{
+                background: #f5f5f5;
+                border-radius: 10px;
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            .content {
+                display: flex;
+                align-items: flex-start;
+            }
+            .middle{
+                margin-left: 20px;
+                margin-top: 75px;
+            }
+            .right {
+                flex: 1;
+                padding: 0px 20px 20px 20px;
+                background: #f5f5f5;
+                border-radius: 10px;
+                margin-top: 75px;
+                margin-left: 20px;
+                box-sizing: border-box;
+            }
+            .radio-con{
+                margin-bottom: 5px;
+            }
+            .radio-con span{
+                margin-right: 10px;
+            }
+            .address-input input{
+                width: 300px;
+                margin-bottom: 10px;
+                display: block;
+            }
+            @media screen and (max-width: 768px) {
+                .content {
+                    flex-direction: column;
+                }
+                .middle{
+                    margin-top: 0;
+                    margin-left: 0;
+                }
+                .right {
+                    flex: 1;
+                    padding: 10px;
+                    background: #f5f5f5;
+                    border-radius: 10px;
+                    margin-top: 20px;
+                    margin-left: 0;
+                    box-sizing: border-box;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <h2>TanglePay-SDK l1 to l2 demo</h2>
+        Hi, this is the demo site of TanglePay-SDK-EthereumProvider
+        <br />
+        For more details, please refer to the spec
+        <a href="https://github.com/TanglePay/TanglePay-SDK" target="_blank">here</a>.
+
+        <div class="content">
+            <div class="left">
+                <h2>API examples</h2>
+                <div class="block">
+                    <h4>eth_sendTransaction</h4>
+                    <div class="address-input">
+                        <input id="eth_address" type="text" placeholder="send to ( address ) ">
+                        <input id="eth_amount" type="number" placeholder="amount">
+                    </div>
+                    <button onclick="onEthSendTransaction()" class="btn btn-primary">ETH Send Transaction</button>
+                </div>
+            </div>
+
+            <div class="middle">
+                
+            </div>
+
+            <div class="right">
+                <div id="text"></div>
+            </div>
+        </div>
+    </body>
+    <script src="./dist/index.min.js"></script>
+    <script>
+        (function (){
+            const dom = document.getElementById('text')
+
+            const exec = async (func, method)=>{
+                try {
+                    const res = await func()
+                    dom.innerText += `
+    ${method} result: ${JSON.stringify(res)}
+    `
+                } catch (error) {
+                    alert(error)
+                    dom.innerText += `
+    ${method} error: ${JSON.stringify(error)}
+    `
+                }
+
+            }
+            const status = document.getElementById('status')
+            
+
+            (async () => {
+                await window.ethereum.setupIotaClient()
+            })()
+        })();
+    </script>
+</html>
