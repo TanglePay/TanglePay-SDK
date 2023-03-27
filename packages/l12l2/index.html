@@ -93,7 +93,7 @@
 
     <body>
         <h2>TanglePay-SDK l1 to l2 demo</h2>
-        Hi, this is the demo site of TanglePay-SDK-EthereumProvider
+        Hi, this is the demo site of TanglePay-SDK
         <br />
         For more details, please refer to the spec
         <a href="https://github.com/TanglePay/TanglePay-SDK" target="_blank">here</a>.
@@ -104,10 +104,11 @@
                 <div class="block">
                     <h4>eth_sendTransaction</h4>
                     <div class="address-input">
-                        <input id="eth_address" type="text" placeholder="send to ( address ) ">
-                        <input id="eth_amount" type="number" placeholder="amount">
+                        <input id="my_mnemonic" type="text" placeholder="my mnemonic">
+                        <input id="to_address" type="text" placeholder="send to ( address ) ">
+                        <input id="send_amount" type="number" placeholder="amount">
                     </div>
-                    <button onclick="onEthSendTransaction()" class="btn btn-primary">ETH Send Transaction</button>
+                    <button onclick="onSendTransaction()" class="btn btn-primary">Send Transaction</button>
                 </div>
             </div>
 
@@ -120,9 +121,11 @@
             </div>
         </div>
     </body>
-    <script src="./dist/index.min.js"></script>
-    <script>
+    <script type="module" src="./dist/index.es.js"></script>
+    <script type="module">
+        import * as l12l2 from './dist/index.es.js'
         (function (){
+            
             const dom = document.getElementById('text')
 
             const exec = async (func, method)=>{
@@ -140,10 +143,23 @@
 
             }
             const status = document.getElementById('status')
-            
+            window.onSendContractTransaction = async () => {
+                const mnemonic = document.getElementById('my_mnemonic').value
+                const toAddress = document.getElementById('to_address').value
+                const amount = document.getElementById('send_amount').value
+                if(!mnemonic || !toAddress || !amount){
+                    return
+                }
+
+                exec(async () => {
+                    l12l2.setMnemonic(mnemonic);
+                    await l12l2.prepareClient();
+                    
+                }, 'SendContractTransaction')
+            }
 
             (async () => {
-                await window.ethereum.setupIotaClient()
+                 
             })()
         })();
     </script>

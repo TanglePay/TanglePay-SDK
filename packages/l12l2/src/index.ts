@@ -1,5 +1,18 @@
-import { init, Client, IBasicOutputBuilderOptions} from "@iota/client-wasm/web";
-import type { AddressTypes, FeatureTypes, HexEncodedString, INativeToken, UnlockConditionTypes } from '@iota/types';
+import { init, Client,CoinType,
+    initLogger,
+    SHIMMER_TESTNET_BECH32_HRP, IBasicOutputBuilderOptions} from "@iota/client-wasm/web";
+import type { AddressTypes, FeatureTypes, HexEncodedString, INativeToken, UnlockConditionTypes,ADDRESS_UNLOCK_CONDITION_TYPE,
+    BASIC_OUTPUT_TYPE,
+    Ed25519Seed,
+    ED25519_ADDRESS_TYPE, ED25519_SIGNATURE_TYPE,
+    Ed25519Address,IKeyPair, ISignatureUnlock,
+    SIGNATURE_UNLOCK_TYPE,TRANSACTION_ESSENCE_TYPE, TRANSACTION_PAYLOAD_TYPE,
+    ITransactionEssence, ITransactionPayload,
+    IUTXOInput,
+    UTXO_INPUT_TYPE,
+    IBasicOutput,IBlock
+} from '@iota/types';
+const DEFAULT_PROTOCOL_VERSION = 2
 import { ACCOUNTS_CONTRACT, EMPTY_BUFFER, EMPTY_BUFFER_BYTE_LENGTH, ENDING_SIGNAL_BYTE, EXTERNALLY_OWNED_ACCOUNT, EXTERNALLY_OWNED_ACCOUNT_TYPE_ID, GAS_BUDGET, TRANSFER_ALLOWANCE } from "./constant";
 import { Allowance, ILayer2Parameters } from "./types";
 interface Assets {
@@ -10,8 +23,126 @@ interface Assets {
 
 //client.buildBasicOutput()
 import { WriteStream, Converter } from '@iota/util.js'
-import BigInteger from "big-integer";
 import { convertDateToUnixTimestamp } from "./util";
+import BigInteger from 'big-integer'
+
+
+
+export const sendTransaction = async (fromAddr:string,toAddr:string,amount:string, client:Client) =>{
+    const outputDetail = await getOutputForSend(fromAddr,amount,client)
+    if (outputDetail == undefined) return;
+    const totalFunds = BigInteger(outputDetail.output.amount);
+
+    const amountToSend = BigInteger(amount);
+
+    const inputs: IUTXOInput[] = [];
+    inputs.push({
+        type: 0,
+        transactionId: outputDetail.metadata.transactionId,
+        transactionOutputIndex: outputDetail.metadata.outputIndex
+    })
+    
+
+    const outputs: IBasicOutput[] = [];
+
+    const buildOption = await getOutputOptions({type:0,pubKeyHash:fromAddr}, toAddr, amount,{layer2Parameters:{
+        networkAddress:'rms1pp4kmrl9n9yy9n049x7kk8h4atm0tu76redhj5wrc2jsskk2vukwxvtgk9u'
+    }});
+    const basicOutput: IBasicOutput = await client.buildBasicOutput(buildOption)
+    outputs.push(basicOutput);
+    if (totalFunds.gt(amountToSend)) {
+    // The remaining output that remains in the origin address
+        const remainderBasicOutput: IBasicOutput = {
+            type: 3,
+            amount: totalFunds.minus(amountToSend).toString(),
+            nativeTokens: [],
+            unlockConditions: [
+                {
+                    type: 0,
+                    address: {
+                        type: 0,
+                        pubKeyHash: fromAddr
+                    }
+                }
+            ],
+            features: []
+        };
+        outputs.push(remainderBasicOutput);
+    }
+    const secretManager = getSecretManager()
+    const preparedTransactionData = await client.prepareTransaction(secretManager,{inputs,outputs})
+    const transactionPayload = await client.signTransaction(secretManager,preparedTransactionData) as ITransactionPayload
+
+    const block: IBlock = {
+        protocolVersion: DEFAULT_PROTOCOL_VERSION,
+        parents: [],
+        payload: transactionPayload,
+        nonce: "0",
+    };
+
+
+    const blockId = await client.postBlock(block)
+
+    console.log(blockId);
+}
+
+const getOutputForSend = async (address:string, amount:string, client:Client) => {
+    const targetAmount = BigInteger(amount)
+    const outputs = await getUnspentOutputs(address, client);
+    for (const outputResp of outputs) {
+        const output = outputResp.output
+        const resAmount = BigInteger(output.amount)
+        if (resAmount.geq(targetAmount)) {
+            return outputResp
+        }
+    }
+    return undefined;
+}
+
+async function getUnspentOutputs(address:string, client:Client) {
+    const outputIdsResponse = await client.basicOutputIds([
+        { address },
+        { hasExpiration: false },
+        { hasTimelock: false },
+        { hasStorageDepositReturn: false },
+    ]);
+
+    // Get outputs by their IDs
+    let addressOutputs = await client.getOutputs(outputIdsResponse);
+    //TODO
+    return addressOutputs;
+} 
+let client:Client
+export const prepareClient = async () => {
+    if (client == undefined) {
+        client = await getIotaClient()
+        await initLogger()
+    }
+}
+let mnemonic:string
+export const setMnemonic = (_mnemonic:string) => {
+    mnemonic = _mnemonic
+}
+const getSecretManager = () => {
+    return {
+        mnemonic: '',
+    };
+}
+
+let fromAddress:string
+async function prepareAddress() {
+    if (fromAddress == undefined) {
+        const secretManager = getSecretManager()
+        const addresses = await client.generateAddresses(secretManager, {
+            accountIndex: 0,
+            range: {
+                start: 0,
+                end: 2,
+            },
+        });
+        fromAddress = addresses[0];
+    }
+}
 
 export async function getIotaClient() {
     await init('./client_wasm_bg.wasm')
@@ -21,10 +152,8 @@ export async function getIotaClient() {
       });
 }
 
-export const sendTransaction = async (client:Client) => {
-    const BasicOutputBuilderOption = getOutputOptions()
-    const BasicOutput = await client.buildBasicOutput(BasicOutputBuilderOption);
-}
+
+
 
 export function getLayer2MetadataForTransfer(layer2Address: string,rawAmount:string,nativeTokenId?: string,
     surplus?: string): string {
@@ -112,17 +241,21 @@ function addGasBudget(rawAmount: string): string {
 }
 export function getOutputOptions(
     senderAddress: AddressTypes,
-    expirationDate: Date,
+    
     recipientAddress: string,
     rawAmount: string,
-    nativeTokenId?: string,
-    metadata?: HexEncodedString,
-    tag?: string,
-    giftStorageDeposit?: boolean,
-    surplus?: string,
-    layer2Parameters?: ILayer2Parameters,
-    nftId?: string
+    ext: {
+        nativeTokenId?: string,
+        metadata?: HexEncodedString,
+        tag?: string,
+        giftStorageDeposit?: boolean,
+        surplus?: string,
+        layer2Parameters?: ILayer2Parameters,
+        nftId?: string,
+        expirationDate?: Date
+    }
 ): IBasicOutputBuilderOptions {
+    let {nativeTokenId, metadata, tag, giftStorageDeposit, surplus, layer2Parameters, nftId, expirationDate} = ext
     const unixTime = expirationDate ? convertDateToUnixTimestamp(expirationDate) : undefined
     const bigAmount = BigInteger(rawAmount)
 
