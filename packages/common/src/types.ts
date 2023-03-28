@@ -35,3 +35,8 @@ export interface MobileWindowSharedContext {
     postMessage(msg: string): void;
   };
 }
+
+export interface RequestArguments {
+  readonly method: string;
+  readonly params?: readonly unknown[] | object;
+}

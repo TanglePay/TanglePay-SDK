@@ -6,9 +6,19 @@ import terser from '@rollup/plugin-terser'
 import nodePolyfills from 'rollup-plugin-polyfill-node';
 import filesize from 'rollup-plugin-filesize'
 
+/*
+config[1].output[0] = Object.assign(config[1].output[0],{globals: {
+    '@iota/util.js': 'IotaUtil',
+    'big-integer':'bigInt'
+  },})
+config[1].external = [
+    '@iota/util.js',
+    'big-integer'
+  ]
+*/
 
-export function decoratePlugin(config,plug,isFront = false){
-    config.forEach((c)=>{
+export function decoratePlugin(configs,plug,isFront = false){
+    configs.forEach((c)=>{
         if (isFront) {
             c.plugins.unshift(plug);
         } else {
@@ -16,6 +26,11 @@ export function decoratePlugin(config,plug,isFront = false){
         }
     })
 }
+export function decorateIifeExternal(config,obj){
+    config.output[0] = Object.assign(config.output[0],{globals: obj})
+    config.external = Object.keys(obj)
+}
+
 export function createRollupConfig(pkg) {
     const moduleName = pkg.name;
     const moduleNameIife = pkg.moduleNameIife;

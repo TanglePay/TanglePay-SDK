@@ -4,7 +4,8 @@
     "description": "DApp SDK to interact with TanglePay wallets",
     "type": "module",
     "scripts": {
-        "bootstrap": "lerna bootstrap"
+        "bootstrap": "lerna bootstrap",
+        "build": "lerna run build"
     },
     "repository": {
         "type": "git",
