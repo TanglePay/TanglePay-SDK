@@ -121,8 +121,10 @@
             </div>
         </div>
     </body>
-    <script type="module" src="./dist/index.min.js"></script>
-    <script type="module">
+    <script src="./BigInteger.min.js"></script>
+    <script src="./index-browser.min.js"></script>
+    <script src="./dist/index.min.js"></script>
+    <script>
         (function (){
             
             const dom = document.getElementById('text')
@@ -134,7 +136,8 @@
     ${method} result: ${JSON.stringify(res)}
     `
                 } catch (error) {
-                    alert(error)
+                    console.log(error)
+                    
                     dom.innerText += `
     ${method} error: ${JSON.stringify(error)}
     `
@@ -142,23 +145,31 @@
 
             }
             const status = document.getElementById('status')
-            window.onSendContractTransaction = async () => {
+            window.onSendTransaction = async () => {
                 const mnemonic = document.getElementById('my_mnemonic').value
                 const toAddress = document.getElementById('to_address').value
                 const amount = document.getElementById('send_amount').value
+                
                 if(!mnemonic || !toAddress || !amount){
                     return
                 }
 
                 exec(async () => {
                     l12l2.setMnemonic(mnemonic);
-                    await l12l2.prepareClient();
-                    
-                }, 'SendContractTransaction')
+                    await l12l2.prepareAddress();
+                    await l12l2.sendTransaction(toAddress,amount);
+                }, 'SendTransaction')
             }
 
             (async () => {
-                 
+                 const l1tol2 = window.l1tol2;
+                 await l1tol2.setup();
+                 /*
+                 const meta = l1tol2.parseLayer2MetadataForTransfer('0x00000000025e4b3ca1e3f42320a1070000000000020000000100611500000003d65f1c35c47eb83d2cbcd40aded35579acbe0e6c01006301000000ffff40420f0000000000020000000000');
+                 const meta2 = l1tol2.parseLayer2MetadataForTransfer('0x00000000025e4b3ca1e3f42320a10700000000000100000001006115000000038d360dae943afdc7f55fd430a921375c5b8fcab4001027000000000000020000000000')
+                 console.log('if',meta)
+                 console.log('alex',meta2)
+                 */
             })()
         })();
     </script>

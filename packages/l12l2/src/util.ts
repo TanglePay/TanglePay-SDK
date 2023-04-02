@@ -5,3 +5,6 @@ export function convertDateToUnixTimestamp(date: Date) {
 }
 
 
+export function decimalToHex(number: number, prefix = false): string {
+  return prefix ? '0x' + number.toString(16) : number.toString(16)
+}
