@@ -2,7 +2,7 @@ declare const IotaSDK: {
     redirectAppStoreIfNotInstalled: boolean;
     isTanglePay: boolean;
     tanglePayVersion: string;
-    request: ({ method, params, timeout }: {
+    request: ({ method, params, timeout, }: {
         method: string;
         timeout: number;
         params: unknown;
