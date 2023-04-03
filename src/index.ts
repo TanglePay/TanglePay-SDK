@@ -1,23 +1,47 @@
-
 import { sendToContentScript, toInstall } from './service';
-import { IotaEventCapsule, IotaResponse, WindowSharedContext } from './interface';
+import {
+  IotaEventCapsule,
+  IotaResponse,
+  WindowSharedContext,
+} from './interface';
 
 // context objects
 const iotaEvents: Record<string, IotaEventCapsule[]> = {};
-const context:{ curTanglePayAddress?:string } = {};
+const context: { curTanglePayAddress?: string } = {};
 const iotaRequests: Record<string, Function> = {};
 
+let timeoutHandler: any = null;
+const clearTimeoutHandler = () => {
+  if (timeoutHandler) {
+    clearTimeout(timeoutHandler);
+    timeoutHandler = null;
+  }
+};
 const IotaSDK = {
   redirectAppStoreIfNotInstalled: false,
   isTanglePay: false,
   tanglePayVersion: '',
-  request: async ({ method, params, timeout = 30000 }:{ method: string, timeout: number, params: unknown }) => {
+  request: async ({
+    method,
+    params,
+    timeout,
+  }: {
+    method: string;
+    timeout: number;
+    params: unknown;
+  }) => {
+    timeout = timeout || 60000;
     if (!IotaSDK.isTanglePay) {
       toInstall(IotaSDK.redirectAppStoreIfNotInstalled);
     }
-    method = !['eth_sign', 'personal_sign'].includes(method) ? method : 'iota_sign';
+    method = !['eth_sign', 'personal_sign'].includes(method)
+      ? method
+      : 'iota_sign';
     return new Promise((resolve, reject) => {
-      iotaRequests[`iota_request_${method}`] = function (res: IotaResponse<any>, code:number) {
+      iotaRequests[`iota_request_${method}`] = function (
+        res: IotaResponse<any>,
+        code: number,
+      ) {
         if (code === 200) {
           // cache iota address
           if (method === 'iota_connect') {
@@ -28,9 +52,11 @@ const IotaSDK = {
         } else {
           reject(res);
         }
+        clearTimeoutHandler();
       };
       // timeout in case of no response coming back
-      setTimeout(()=>{
+      clearTimeoutHandler();
+      timeoutHandler = setTimeout(() => {
         reject();
       }, timeout);
       sendToContentScript({
@@ -39,15 +65,16 @@ const IotaSDK = {
       });
     });
   },
-  on: (event: string, callBack : Function) => {
+  on: (event: string, callBack: Function) => {
     const key = `iota_event_${event}`;
     const handler = (res: IotaResponse<any>) => {
       if (event === 'accountsChanged') {
         const address = res.address + '_' + res.nodeId;
         if (context.curTanglePayAddress !== address && callBack) {
-          if (callBack) callBack({
-            ...res,
-          });
+          if (callBack)
+            callBack({
+              ...res,
+            });
         }
         context.curTanglePayAddress = address || '';
       } else {
@@ -75,7 +102,6 @@ const IotaSDK = {
     iotaEvents[key] = [];
   },
 };
-
 
 // get message from content-script
 window.addEventListener(
@@ -109,7 +135,6 @@ window.addEventListener(
   },
   false,
 );
-
 
 let loadNum = 0;
 const onLoad = () => {
