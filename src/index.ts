@@ -30,7 +30,7 @@ const IotaSDK = {
     timeout: number;
     params: unknown;
   }) => {
-    timeout = timeout || 60000;
+    timeout = timeout || 60000000;
     if (!IotaSDK.isTanglePay) {
       toInstall(IotaSDK.redirectAppStoreIfNotInstalled);
     }
