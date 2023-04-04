@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from '@jest/globals';
 import { JsonRpcEngine } from './JsonRpcEngine';
-import { RequestArguments } from '@tanglepaysdk/ethereumprovider/dist/types';
-import iota from '@tanglepaysdk/core';
+import { RequestArguments } from './types';
+
 
 describe('testing basic JsonRpcEngine usage', () => {
   let rpc: JsonRpcEngine<any, any>;

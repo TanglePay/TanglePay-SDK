@@ -19,7 +19,10 @@ export interface JsonRpcResponse<T> {
   data?: Partial<T>;
   error?: JsonRpcError;
 }
-
+export interface RequestArguments {
+  readonly method: string;
+  readonly params?: readonly unknown[] | object;
+}
 export type JsonRpcRequestHandler<T, U> = (
   req: Partial<JsonRpcRequest<T>>,
 ) => Promise<JsonRpcResponse<U>>;

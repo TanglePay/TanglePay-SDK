@@ -13,10 +13,7 @@ export const ethGetBlockByNumber = async (
   returnTransactionObjects: boolean,
 ) => {
   // @ts-ignore
-  const res = await client_?.eth.getBlock(
-    blockHashOrBlockNumber,
-    returnTransactionObjects,
-  );
+  const res = await client_?.eth.getBlock(blockHashOrBlockNumber,returnTransactionObjects);
   return res;
 };
 
