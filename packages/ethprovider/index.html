@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"
+        ></script>
+        <script type="text/javascript" src="./web3.min.js"></script>
+        <style>
+            body {
+                padding: 20px;
+            }
+            #text {
+                word-break: break-all;
+            }
+            h2 {
+                padding-top: 30px;
+            }
+            .block{
+                background: #f5f5f5;
+                border-radius: 10px;
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            .content {
+                display: flex;
+                align-items: flex-start;
+            }
+            .middle{
+                margin-left: 20px;
+                margin-top: 75px;
+            }
+            .right {
+                flex: 1;
+                padding: 0px 20px 20px 20px;
+                background: #f5f5f5;
+                border-radius: 10px;
+                margin-top: 75px;
+                margin-left: 20px;
+                box-sizing: border-box;
+            }
+            .radio-con{
+                margin-bottom: 5px;
+            }
+            .radio-con span{
+                margin-right: 10px;
+            }
+            .address-input input{
+                width: 300px;
+                margin-bottom: 10px;
+                display: block;
+            }
+            @media screen and (max-width: 768px) {
+                .content {
+                    flex-direction: column;
+                }
+                .middle{
+                    margin-top: 0;
+                    margin-left: 0;
+                }
+                .right {
+                    flex: 1;
+                    padding: 10px;
+                    background: #f5f5f5;
+                    border-radius: 10px;
+                    margin-top: 20px;
+                    margin-left: 0;
+                    box-sizing: border-box;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <h2>TanglePay-SDK-EthereumProvider v1.0.1</h2>
+        Hi, this is the demo site of TanglePay-SDK-EthereumProvider
+        <br />
+        For more details, please refer to the spec
+        <a href="https://github.com/TanglePay/TanglePay-SDK" target="_blank">here</a>.
+
+        <h2>Wallet status</h2>
+        <div id="status">Wallet not installed</div>
+
+        <div class="content">
+            <div class="left">
+                <h2>API examples</h2>
+                <div class="block">
+                    <h4>eth_connect</h4>
+                    <button onclick="onConnect()" class="btn btn-primary">Connect</button>
+                </div>
+
+                <div class="block">
+                    <h4>sign</h4>
+                    <div class="address-input">
+                        <input id="sign_eth_data" type="text" placeholder="content">
+                    </div>
+                    <button onclick="onEthSign()" class="btn btn-primary">Sign</button>
+                </div>
+
+                <div class="block">
+                    <h4>personal_sign</h4>
+                    <div class="address-input">
+                        <input id="sign_eth_personal_data" type="text" placeholder="content">
+                    </div>
+                    <div class="address-input">
+                        <input id="sign_eth_personal_password" type="text" placeholder="password">
+                    </div>
+                    <button onclick="onEthPersonalSign()" class="btn btn-primary">Personal Sign</button>
+                </div>
+
+                <div class="block">
+                    <h4>eth_requestAccounts</h4>
+                    <button onclick="onGetAccounts()" class="btn btn-primary">Get Accounts</button>
+                </div>
+            </div>
+
+            <div class="middle">
+                <div class="block">
+                    <h4>eth_getBalance</h4>
+                    <button onclick="getEthBalances()" class="btn btn-primary">Get Eth balances</button>
+                </div>
+
+                <div class="block">
+                    <h4>eth_sendTransaction</h4>
+                    <div class="address-input">
+                        <input id="eth_address" type="text" placeholder="send to ( address ) ">
+                        <input id="eth_amount" type="number" placeholder="amount">
+                    </div>
+                    <button onclick="onEthSendTransaction()" class="btn btn-primary">ETH Send Transaction</button>
+                </div>
+                <div class="block">
+                    <h4>eth_sendTransaction (contract)</h4>
+                    <div class="address-input">
+                        <input id="eth_contract_address" type="text" placeholder="send to ( address ) ">
+                        <input id="eth_contract_data" placeholder="data">
+                    </div>
+                    <button onclick="onEthSendContractTransaction()" class="btn btn-primary">ETH Send Transaction</button>
+                </div>
+            </div>
+
+            <div class="right">
+                <div id="text"></div>
+            </div>
+        </div>
+    </body>
+    <script src="./dist/index.min.js"></script>
+    <script>
+        (function (){
+            const dom = document.getElementById('text')
+
+            const exec = async (func, method)=>{
+                try {
+                    const res = await func()
+                    dom.innerText += `
+    ${method} result: ${JSON.stringify(res)}
+    `
+                } catch (error) {
+                    alert(error)
+                    dom.innerText += `
+    ${method} error: ${JSON.stringify(error)}
+    `
+                }
+
+            }
+            const status = document.getElementById('status')
+            const web3 = new Web3(window.ethereum)
+            window.onEthSign = async () => {
+                const content = document.getElementById('sign_eth_data').value
+                const address = window.addressList[0]
+                await exec(async ()=>{
+                    return await web3.eth.sign(content, address)
+                }, 'Eth Sign')
+            }
+            window.onEthPersonalSign = async (bool) => {
+                const address = window.addressList[0]
+
+                const content = document.getElementById('sign_eth_personal_data').value
+                const password = document.getElementById('sign_eth_personal_password').value
+                if(!content || !password){
+                    return;
+                }
+                await exec(async ()=>{
+                    return await web3.eth.personal.sign(content,address,password)
+                },'Eth Personal Sign')
+            }
+
+            // expire time, default: 1 day (1000 * 3600 * 24 milliseconds).
+            window.onConnect = async (bool) => {
+                try {
+                    if (window.ethereum) {
+                        const res = await window.ethereum.request({method:'eth_connect'})
+                        dom.innerText += `
+    Connect result: ${JSON.stringify(res)}
+    `
+                        return res
+                    }
+                    /*
+                    const res = await iota.request({
+                        method: 'iota_connect',
+                        params: {
+                            // expires: 3000000
+                        }
+                    })
+
+                     */
+
+                } catch (error) {
+                    console.log(error, '----')
+                    dom.innerText += `
+    Connect result: ${JSON.stringify(error)}
+    `
+                }
+            }
+
+            window.onGetAccounts = async () => {
+
+                await exec(async ()=>{
+                    const res = await web3.eth.requestAccounts()
+                    alert(JSON.stringify(res))
+                    window.addressList = res
+                    return res
+                }, 'Get Account')
+
+            }
+
+
+
+            window.onEthSendTransaction = async () => {
+                const address = document.getElementById('eth_address').value
+                const amount = document.getElementById('eth_amount').value
+                if(!address || !amount){
+                    return
+                }
+
+                await exec(async ()=>{
+                    const from = window.addressList[0]
+                    return await web3.eth.sendTransaction({
+                        from,
+                        to:address,
+                        value: amount})
+                }, 'Eth SendTransaction')
+            }
+
+            window.onEthSendContractTransaction = async () => {
+                const address = document.getElementById('eth_contract_address').value
+                const data = document.getElementById('eth_contract_data').value || ''
+                if(!address || !data){
+                    return
+                }
+
+                exec(async () => {
+                    const from = window.addressList[0]
+                    return await web3.eth.sendTransaction({
+                        from,
+                        to:address,
+                        data
+                    })
+                }, 'Eth SendContractTransaction')
+            }
+
+
+            window.getEthBalances = async (addressList) => {
+
+                const address = window.addressList[0]
+                //const assetsList = ['evm'];
+                //const addressList = [];
+                await exec(async ()=>{
+                    return await web3.eth.getBalance(address)
+                },'Eth Balances')
+                /*
+                try {
+
+                    const res = await iota.request({
+                        method: 'eth_getBalance',
+                        params: {
+                            assetsList, // ['evm','soonaverse']
+                            // addressList:addressList,
+                            addressList: [] // current addressList
+                        }
+                    })
+
+                    dom.innerText += `
+    Get eth balance result: ${JSON.stringify(res)}
+    `
+                    return res
+                } catch (error) {
+                    dom.innerText += `
+    Get eth balance result: ${JSON.stringify(error)}
+    `
+                    return error
+                }
+                kkkk
+                 */
+            }
+
+
+            const changeAccountHandler = (e) => {
+                const { address } = e
+                dom.innerText += `
+    Switch account event: ${JSON.stringify(e)}
+    `
+                // window.onConnect()
+            }
+            window.onGetAccounts()
+            //iota.on('accountsChanged', changeAccountHandler)
+        })();
+    </script>
+</html>

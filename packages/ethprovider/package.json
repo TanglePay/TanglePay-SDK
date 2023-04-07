@@ -1,0 +1,41 @@
+{
+  "name": "@tanglepaysdk/ethereumprovider",
+  "version": "0.0.1",
+  "description": "eip-1193 compliant provider implementation for connecting ethereum via TanglePay wallet",
+  "main": "dist/index.es.js",
+  "types": "dist/types/index.d.ts",
+  "type": "module",
+  "browser": "dist/index.min.js",
+  "module": "dist/index.es.js",
+  "moduleNameIife": "ethereum",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build:type": "tsc",
+    "build:source": "rollup --config rollup.config.mjs",
+    "build": "npm run clean && npm run build:type && npm run build:source",
+    "lint": "eslint src --fix --ext .ts,.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TanglePay/TanglePay-SDK.git"
+  },
+  "keywords": [
+    "eip-1193",
+    "ethereum-provider",
+    "TanglePay",
+    "Dapp",
+    "Iota",
+    "wallet"
+  ],
+  "author": "TanglePay",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/TanglePay/TanglePay-SDK/issues"
+  },
+  "homepage": "https://github.com/TanglePay/TanglePay-SDK#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "@tanglepaysdk/common": "^0.0.1",
+    "@tanglepaysdk/core": "^0.0.8"
+  }
+}

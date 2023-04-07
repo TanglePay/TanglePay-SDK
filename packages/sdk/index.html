@@ -673,8 +673,7 @@ Connect result: ${JSON.stringify(res)}
                 try {
                     const res = await iota.request({
                         method: 'iota_getPublicKey',
-                        params: {} // current address
-                        // params: { address: 'rms1qzthtcqc8e204naua69cly4csc98cweycw77044s6n3jgvf75kluz5ms6wn' }
+                        params: { address: '##currentAddress' }
                     })
                     dom.innerText += `
     Get publicKey result: ${JSON.stringify(res)}
