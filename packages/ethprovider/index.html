@@ -173,7 +173,6 @@
     ${method} result: ${JSON.stringify(res)}
     `
                 } catch (error) {
-                    alert(error)
                     dom.innerText += `
     ${method} error: ${JSON.stringify(error)}
     `
@@ -233,7 +232,6 @@
 
                 await exec(async ()=>{
                     const res = await web3.eth.requestAccounts()
-                    alert(JSON.stringify(res))
                     window.addressList = res
                     return res
                 }, 'Get Account')

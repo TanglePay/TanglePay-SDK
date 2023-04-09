@@ -81,7 +81,6 @@ const IotaSDK = {
 // get message from content-script
 
 _stream.on('data', (data_?:any)=>{
-  alert(JSON.stringify(data_))
   const cmd = (data_?.cmd || '').replace('contentToInject##', '');
   const data = data_?.data;
   const code = data_?.code;
