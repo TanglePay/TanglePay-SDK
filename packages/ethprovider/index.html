@@ -110,7 +110,7 @@
                     <button onclick="onConnect()" class="btn btn-primary">Connect</button>
                 </div>
 
-                <div class="block">
+                <div class="block" style="display: none;">
                     <h4>sign</h4>
                     <div class="address-input">
                         <input id="sign_eth_data" type="text" placeholder="content">
@@ -122,9 +122,6 @@
                     <h4>personal_sign</h4>
                     <div class="address-input">
                         <input id="sign_eth_personal_data" type="text" placeholder="content">
-                    </div>
-                    <div class="address-input">
-                        <input id="sign_eth_personal_password" type="text" placeholder="password">
                     </div>
                     <button onclick="onEthPersonalSign()" class="btn btn-primary">Personal Sign</button>
                 </div>
@@ -196,12 +193,11 @@
                 const address = window.addressList[0]
 
                 const content = document.getElementById('sign_eth_personal_data').value
-                const password = document.getElementById('sign_eth_personal_password').value
-                if(!content || !password){
+                if(!content){
                     return;
                 }
                 await exec(async ()=>{
-                    return await web3.eth.personal.sign(content,address,password)
+                    return await web3.eth.personal.sign(content,address)
                 },'Eth Personal Sign')
             }
 

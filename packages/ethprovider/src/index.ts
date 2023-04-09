@@ -59,9 +59,7 @@ class EthereumProvider extends EventEmitter implements IEthereumProvider {
             'eth_connect':'iota_connect',
           };
           const requestMapping:Record<string, Function> = {
-              'eth_sign':(data:unknown)=> ({
-                  content:data
-              }),
+              'eth_sign':(data:undefined[])=> data.reverse(),
               'personal_sign':(data:unknown)=> ({
                   content:data
               }),
