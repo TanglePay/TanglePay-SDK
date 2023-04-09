@@ -1,6 +1,5 @@
 import { EventEmitter } from 'events';
 
-
 export interface ProviderRpcError extends Error {
   code: number;
   data?: unknown;
@@ -30,11 +29,7 @@ export interface IEthereumProvider extends EventEmitter {
   // chain changed event
   on(event: 'chainChanged', listener: (chainId: string) => void): this;
   // accounts changed event
-  on(
-    event: 'accountsChanged',
-    listener: (accounts: string[]) => void
-  ): this;
+  on(event: 'accountsChanged', listener: (accounts: string[]) => void): this;
   // make an Ethereum RPC method call.
   request(args: RequestArguments): Promise<unknown>;
 }
-
