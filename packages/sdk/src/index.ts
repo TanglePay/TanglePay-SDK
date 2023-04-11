@@ -2,7 +2,7 @@
 import { toInstall } from './service';
 import { IotaResponse, SendToScriptParam, WindowSharedContext } from './types';
 import { EventEmitter } from 'events';
-import {EventCallback, JsonRpcEngine, JsonRpcId, JsonRpcResponse, WindowPostStream} from '@tanglepaysdk/common';
+import {EventCallback, JsonRpcEngine, JsonRpcId, JsonRpcResponse, WindowPostStream} from 'tanglepaysdk-common';
 
 // context objects
 const context:{ curTanglePayAddress?:string } = {};
