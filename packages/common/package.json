@@ -1,6 +1,6 @@
 {
-  "name": "@tanglepaysdk/common",
-  "version": "0.0.1",
+  "name": "tanglepaysdk-common",
+  "version": "0.1.5",
   "description": "",
   "main": "dist/index.es.js",
   "types": "dist/types/index.d.ts",

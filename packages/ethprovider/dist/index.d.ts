@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { IEthereumProvider, RequestArguments } from './types';
 import { EventEmitter } from 'events';
-import { JsonRpcEngine } from '@tanglepaysdk/common';
+import { JsonRpcEngine } from 'tanglepaysdk-common';
 declare class EthereumProvider extends EventEmitter implements IEthereumProvider {
     _version: number;
     _rpcEngine: JsonRpcEngine<unknown[] | object, unknown>;

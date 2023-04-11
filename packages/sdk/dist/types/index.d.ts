@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { EventEmitter } from 'events';
-import { EventCallback } from '@tanglepaysdk/common';
+import { EventCallback } from 'tanglepaysdk-common';
 declare const IotaSDK: {
     redirectAppStoreIfNotInstalled: boolean;
     isTanglePay: boolean;
