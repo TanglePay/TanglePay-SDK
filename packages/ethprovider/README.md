@@ -2,12 +2,14 @@
 
 `@tanglepay/ethereum-provider` is an Ethereum provider adapter for the TanglePay SDK, allowing developers to use popular Ethereum libraries like web3.js with TanglePay without modifying existing code.
 
-[![npm version](https://badge.fury.io/js/%40tanglepay%2Fethereum-provider.svg)](https://www.npmjs.com/package/@tanglepay/ethereum-provider)
+[![npm version](https://badge.fury.io/js/tanglepaysdk-ethereumprovider.svg)](https://www.npmjs.com/package/tanglepaysdk-ethereumprovider)
 
 ## Installation
 
 \```bash
-npm install @tanglepay/ethereum-provider
+
+npm install tanglepaysdk-ethereumprovider
+
 \```
 
 ## Usage
@@ -27,4 +29,5 @@ We welcome contributions to the TanglePay SDK! Please read our [CONTRIBUTING.md]
 
 ## License
 
-`@tanglepay/ethereum-provider` is released under the [MIT License](../LICENSE).
+`@tanglepay/ethereum-provider` is released under the [Apache License](../LICENSE).
+
