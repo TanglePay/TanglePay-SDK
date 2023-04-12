@@ -7,7 +7,9 @@
 ## Installation
 
 \```bash
+
 npm install tanglepaysdk-ethereumprovider
+
 \```
 
 ## Usage
@@ -28,3 +30,4 @@ We welcome contributions to the TanglePay SDK! Please read our [CONTRIBUTING.md]
 ## License
 
 `@tanglepay/ethereum-provider` is released under the [Apache License](../LICENSE).
+

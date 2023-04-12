@@ -1,7 +1,7 @@
 import { IEthereumProvider, RequestArguments } from './types';
 import { EventEmitter } from 'events';
-import iota from '@tanglepaysdk/core';
-import {JsonRpcEngine, JsonRpcRequest, JsonRpcRequestHandler, JsonRpcRequestMiddleware} from '@tanglepaysdk/common';
+import iota from 'tanglepaysdk-client';
+import {JsonRpcEngine, JsonRpcRequest, JsonRpcRequestHandler, JsonRpcRequestMiddleware} from 'tanglepaysdk-common';
 
 class EthereumProvider extends EventEmitter implements IEthereumProvider {
 

@@ -1,4 +1,4 @@
-import {JsonRpcId} from "@tanglepaysdk/common";
+import {JsonRpcId} from "tanglepaysdk-common";
 
 export declare interface SendToScriptParam {
   cmd: string;
