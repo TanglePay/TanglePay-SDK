@@ -31,10 +31,15 @@ import type {
   IBasicOutput,
   IBlock,
   IOutputResponse,
+  INftOutput,
+  ICommonOutput,
+  OutputTypes,
 } from '@iota/types';
 const DEFAULT_PROTOCOL_VERSION = 2;
 import {
   ACCOUNTS_CONTRACT,
+  CONTRACT_ADDRESS,
+  CONTRACT_ALIAS_ID,
   EMPTY_BUFFER,
   EMPTY_BUFFER_BYTE_LENGTH,
   ENDING_SIGNAL_BYTE,
@@ -117,6 +122,29 @@ class L1ToL2 {
     }
     return undefined;
   };
+  
+  async getOutputForNftSend(
+    nftId: string
+  ){
+    const outputs = await this.getNftOutputs();
+    if (!outputs) return;
+    for (const outputResp of outputs) {
+        if ((outputResp.output as INftOutput ).nftId === nftId) {
+          return outputResp;
+        }
+    }
+    
+  }
+  
+  async getNftOutputs():Promise<IOutputResponse[]|undefined>{
+    if (!this._client) return
+    const outputIdsResponse = await this._client.nftOutputIds([
+      { address:this._fromAddressBech32??'' },
+    ]);
+    let addressOutputs = await this._client.getOutputs(outputIdsResponse);
+    console.log('all nft outputs',addressOutputs)
+    return addressOutputs;
+  }
   async getUnspentOutputs():Promise<IOutputResponse[]|undefined>{
     if (!this._client) return
     const outputIdsResponse = await this._client.basicOutputIds([
@@ -128,7 +156,10 @@ class L1ToL2 {
   
     // Get outputs by their IDs
     let addressOutputs = await this._client.getOutputs(outputIdsResponse);
+    console.log('all outputs',addressOutputs)
+    // Filter out spent outputs
     addressOutputs = addressOutputs.filter(o=>!o.metadata.isSpent)
+    console.log('unspent outputs',addressOutputs)
     return addressOutputs;
   }
   async prepareAddress(){
@@ -223,6 +254,28 @@ class L1ToL2 {
     }
     return allowance.finalBytes();
   }
+  private _getAmountFromTransactionDetails({rawAmount,nftId,nativeTokenId,surplus}:{
+    rawAmount: string;
+    nftId?: string;
+    nativeTokenId?: string;
+    surplus?: string;
+  }){
+    if (!nftId) {
+      
+      if (nativeTokenId) {
+          rawAmount = surplus ?? '0'
+      } else {
+          rawAmount = BigInt(rawAmount).toString()
+      }
+  } else if (nftId) {
+      rawAmount = surplus ?? '0'
+  } else {
+      rawAmount = '0'
+  }
+    return rawAmount ?? '0';
+  }
+
+
   private async _getOutputOptions(
     senderAddress: AddressTypes,
     recipientAddress: string,
@@ -235,9 +288,10 @@ class L1ToL2 {
       surplus?: string;
       layer2Parameters?: ILayer2Parameters;
       nftId?: string;
+      nftOutput?: INftOutput;
       expirationDate?: Date;
     },
-  ): Promise<IBasicOutput> {
+  ): Promise<IBasicOutput | INftOutput> {
     if (!this._client) throw new Error('client not init')
     let {
       nativeTokenId,
@@ -247,36 +301,29 @@ class L1ToL2 {
       surplus,
       layer2Parameters,
       nftId,
+      nftOutput,
       expirationDate,
     } = ext;
     const unixTime = expirationDate
       ? convertDateToUnixTimestamp(expirationDate)
       : undefined;
+    let amount = this._getAmountFromTransactionDetails({rawAmount,nftId,nativeTokenId,surplus});
+    amount = layer2Parameters ? this._addGasBudget(amount) : amount; 
     const bigAmount = BigInteger(rawAmount);
   
-    let amount: string;
-    if (nativeTokenId && surplus) {
-      amount = surplus;
-    } else {
-      amount = nativeTokenId ? '0' : bigAmount.toString();
-    }
   
     if (tag != undefined) {
       tag = Converter.utf8ToHex(tag, true);
     }
-    if (layer2Parameters) {
-      amount = this._addGasBudget(amount);
-      metadata = this._getLayer2MetadataForTransfer(
-        recipientAddress,
-        rawAmount,
-        nativeTokenId,
-        surplus,
-      );
-      recipientAddress = await this._client.bech32ToHex(layer2Parameters.networkAddress)
-    } else {
-      if (metadata) metadata = Converter.utf8ToHex(metadata, true);
-    }
-  
+    metadata = layer2Parameters ? this._getLayer2MetadataForTransfer(
+      recipientAddress,
+      rawAmount,
+      nativeTokenId,
+      surplus,
+    ) : (metadata ? Converter.utf8ToHex(metadata, true) : metadata);
+      
+    recipientAddress = layer2Parameters ? await this._client.bech32ToHex(layer2Parameters.networkAddress) : recipientAddress;
+    
     const assets: Assets = {};
     if (nftId) {
       assets.nftId = nftId;
@@ -298,28 +345,38 @@ class L1ToL2 {
     if (tag) {
       features.push({ type: 3, tag });
     }
-    //TODO aliasId
     const unlockConditions: UnlockConditionTypes[] = [{type:0,address:{type:8,aliasId:
-      '0x6b6d8fe5994842cdf529bd6b1ef5eaf6f5f3da1e5b7951c3c2a5085aca672ce3'
-      //'0x9d42573526902b116c905fcb2248847cc6c63c64e5c2af89d0c625ce6eaae5ec'
+      CONTRACT_ALIAS_ID
     }}];
     if (unixTime) {
       unlockConditions.push({ type: 2, unixTime });
     }
+    if (nftId && nftOutput) return {
+      type:6,
+      amount:this._addGasBudget(nftOutput.amount),
+      nftId,
+      immutableFeatures:nftOutput.immutableFeatures,
+      features,
+      unlockConditions,
+    };
     return {
       type:3,
       amount,
       features,
       unlockConditions,
-      ...((nativeTokenId || nftId) && { assets }),
     };
   }
 
   async sendTransaction(
     toAddr: string,
     amount: string,
+    nftId?: string,
   ){
     if (!(this._client && this._fromAddressBech32)) return;
+    let nftOutput:IOutputResponse|undefined
+    if (nftId) {
+      nftOutput = await this.getOutputForNftSend(nftId);
+    }
     const outputDetail = await this.getOutputForSend(amount);
     if (outputDetail == undefined) return;
     const totalFunds = BigInteger(outputDetail.output.amount);
@@ -332,17 +389,25 @@ class L1ToL2 {
       transactionId: outputDetail.metadata.transactionId,
       transactionOutputIndex: outputDetail.metadata.outputIndex,
     });
-  
-    const outputs: IBasicOutput[] = [];
-  
-    const basicOutput: IBasicOutput = await this._getOutputOptions(
+    
+    if (nftOutput) {
+      inputs.push({
+        type: 0,
+        transactionId: nftOutput.metadata.transactionId,
+        transactionOutputIndex: nftOutput.metadata.outputIndex,
+      });
+    }
+    const outputs: OutputTypes[] = [];
+    
+    const basicOutput: IBasicOutput | INftOutput = await this._getOutputOptions(
       { type: 0, pubKeyHash: this._fromAddressHex??'' },
       toAddr,
       amount,
       {
+        nftId,
+        nftOutput: nftOutput?.output as INftOutput,
         layer2Parameters: {
-          networkAddress: 'rms1pp4kmrl9n9yy9n049x7kk8h4atm0tu76redhj5wrc2jsskk2vukwxvtgk9u',
-            //'rms1pzw5y4e4y6gzkytvjp0ukgjgs37vd33uvnju9tuf6rrztnnw4tj7crw72ar',
+          networkAddress: CONTRACT_ADDRESS,
         },
       },
     );
@@ -350,9 +415,10 @@ class L1ToL2 {
     outputs.push(basicOutput);
     if (totalFunds.gt(amountToSend)) {
       // The remaining output that remains in the origin address
+      let remainingFund = totalFunds.minus(BigInteger(basicOutput.amount))
       const remainderBasicOutput: IBasicOutput = {
         type: 3,
-        amount: totalFunds.minus(BigInteger(basicOutput.amount)).toString(),
+        amount: remainingFund.toString(),
         nativeTokens: [],
         unlockConditions: [
           {
@@ -370,7 +436,7 @@ class L1ToL2 {
     console.log(outputs)
     const secretManager = this._getSecretManager();
     const blockOption:IBuildBlockOptions = { inputs, outputs }
-    console.log(JSON.stringify(blockOption))
+    console.log(blockOption)
     const preparedTransactionData = await this._client.prepareTransaction(
       secretManager,
       blockOption,
