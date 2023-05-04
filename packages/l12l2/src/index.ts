@@ -66,8 +66,8 @@ class L1ToL2 {
   constructor(){
 
   }
-  async setup(){
-    await init('./client_wasm_bg.wasm');
+  async setup(path?:string){
+    await init(path ? path : './client_wasm_bg.wasm');
     await initLogger();
     
     this._client = new Client({
