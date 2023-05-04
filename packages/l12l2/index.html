@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"
+        ></script>
+        <style>
+            body {
+                padding: 20px;
+            }
+            #text {
+                word-break: break-all;
+            }
+            h2 {
+                padding-top: 30px;
+            }
+            .block{
+                background: #f5f5f5;
+                border-radius: 10px;
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            .content {
+                display: flex;
+                align-items: flex-start;
+            }
+            .middle{
+                margin-left: 20px;
+                margin-top: 75px;
+            }
+            .right {
+                flex: 1;
+                padding: 0px 20px 20px 20px;
+                background: #f5f5f5;
+                border-radius: 10px;
+                margin-top: 75px;
+                margin-left: 20px;
+                box-sizing: border-box;
+            }
+            .radio-con{
+                margin-bottom: 5px;
+            }
+            .radio-con span{
+                margin-right: 10px;
+            }
+            .address-input input{
+                width: 300px;
+                margin-bottom: 10px;
+                display: block;
+            }
+            @media screen and (max-width: 768px) {
+                .content {
+                    flex-direction: column;
+                }
+                .middle{
+                    margin-top: 0;
+                    margin-left: 0;
+                }
+                .right {
+                    flex: 1;
+                    padding: 10px;
+                    background: #f5f5f5;
+                    border-radius: 10px;
+                    margin-top: 20px;
+                    margin-left: 0;
+                    box-sizing: border-box;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <h2>TanglePay-SDK l1 to l2 demo</h2>
+        Hi, this is the demo site of TanglePay-SDK
+        <br />
+        For more details, please refer to the spec
+        <a href="https://github.com/TanglePay/TanglePay-SDK" target="_blank">here</a>.
+
+        <div class="content">
+            <div class="left">
+                <h2>API examples</h2>
+                <div class="block">
+                    <h4>eth_sendTransaction</h4>
+                    <div class="address-input">
+                        <input id="my_mnemonic" type="text" placeholder="my mnemonic">
+                        <input id="to_address" type="text" placeholder="send to ( address ) ">
+                        <input id="send_amount" type="number" placeholder="amount">
+                        <input id="nft_id" type="text" placeholder="nft_id">
+                    </div>
+                    <button onclick="onSendTransaction()" class="btn btn-primary">Send Transaction</button>
+                </div>
+            </div>
+
+            <div class="middle">
+                
+            </div>
+
+            <div class="right">
+                <div id="text"></div>
+            </div>
+        </div>
+    </body>
+    <script src="./BigInteger.min.js"></script>
+    <script src="./index-browser.min.js"></script>
+    <script src="./dist/index.min.js"></script>
+    <script>
+        (function (){
+            
+            const dom = document.getElementById('text')
+
+            const exec = async (func, method)=>{
+                try {
+                    const res = await func()
+                    dom.innerText += `
+    ${method} result: ${JSON.stringify(res)}
+    `
+                } catch (error) {
+                    console.log(error)
+                    
+                    dom.innerText += `
+    ${method} error: ${JSON.stringify(error)}
+    `
+                }
+
+            }
+            const status = document.getElementById('status')
+            window.onSendTransaction = async () => {
+                const mnemonic = document.getElementById('my_mnemonic').value
+                const toAddress = document.getElementById('to_address').value
+                const amount = document.getElementById('send_amount').value
+                const nftId = document.getElementById('nft_id').value
+                
+                if(!mnemonic || !toAddress || !amount){
+                    return
+                }
+
+                exec(async () => {
+                    l12l2.setMnemonic(mnemonic);
+                    await l12l2.prepareAddress();
+                    await l12l2.sendTransaction(toAddress,amount,nftId);
+                }, 'SendTransaction')
+            }
+
+            (async () => {
+                 const l1tol2 = window.l1tol2;
+                 await l1tol2.setup();
+                 const meta = l1tol2.parseLayer2MetadataForTransfer('0x00000000025e4b3ca1e3f42320a1070000000000010000000100611500000003e85cb2849f9ad567315f70756269986b561b64b8000000000000000000020000000100dccfd7cc69c4dc71dabe0dc119fb07bf29b776791b21100218a0ee74ad059e37');
+                 const meta2 = l1tol2.parseLayer2MetadataForTransfer('0x00000000025e4b3ca1e3f42320a1070000000000010000000100611500000003e85cb2849f9ad567315f70756269986b561b64b8000000000000000000020000000000')
+                 console.log('if',meta)
+                 console.log('alex',meta2)
+                 
+            })()
+        })();
+    </script>
+</html>

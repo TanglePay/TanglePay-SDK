@@ -20,6 +20,7 @@
   "license": "ISC",
   "devDependencies": {},
   "dependencies": {
+    "@iota/client-wasm": "^1.0.0-alpha.2",
     "web3": "^1.8.2"
   }
 }

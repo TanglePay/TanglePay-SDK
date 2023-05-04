@@ -1,14 +1,11 @@
 import { EventEmitter } from 'events';
+import { RequestArguments} from 'tanglepaysdk-common';
 
 export interface ProviderRpcError extends Error {
   code: number;
   data?: unknown;
 }
 
-export interface RequestArguments {
-  readonly method: string;
-  readonly params?: readonly unknown[] | object;
-}
 
 export interface ProviderMessage {
   type: string;
