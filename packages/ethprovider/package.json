@@ -1,6 +1,6 @@
 {
   "name": "tanglepaysdk-ethereumprovider",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "eip-1193 compliant provider implementation for connecting ethereum via TanglePay wallet",
   "main": "dist/index.es.js",
   "types": "dist/types/index.d.ts",
@@ -35,7 +35,7 @@
   "homepage": "https://github.com/TanglePay/TanglePay-SDK#readme",
   "devDependencies": {},
   "dependencies": {
-    "tanglepaysdk-common": "^0.1.6",
-    "tanglepaysdk-client": "^0.1.6"
+    "tanglepaysdk-common": "^0.1.7",
+    "tanglepaysdk-client": "^0.1.7"
   }
 }

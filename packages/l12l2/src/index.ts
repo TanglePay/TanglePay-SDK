@@ -276,7 +276,7 @@ class L1ToL2 {
   }
 
 
-  private async _getOutputOptions(
+  public async getOutputOptions(
     senderAddress: AddressTypes,
     recipientAddress: string,
     rawAmount: string,
@@ -292,7 +292,7 @@ class L1ToL2 {
       expirationDate?: Date;
     },
   ): Promise<IBasicOutput | INftOutput> {
-    if (!this._client) throw new Error('client not init')
+    // if (!this._client) throw new Error('client not init')
     let {
       nativeTokenId,
       metadata,
@@ -399,7 +399,7 @@ class L1ToL2 {
     }
     const outputs: OutputTypes[] = [];
     
-    const basicOutput: IBasicOutput | INftOutput = await this._getOutputOptions(
+    const basicOutput: IBasicOutput | INftOutput = await this.getOutputOptions(
       { type: 0, pubKeyHash: this._fromAddressHex??'' },
       toAddr,
       amount,

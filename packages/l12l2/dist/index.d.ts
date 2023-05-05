@@ -1,5 +1,5 @@
-import type { HexEncodedString, IOutputResponse } from '@iota/types';
-import { ILayer2TransferAllowanceMetadata } from './types';
+import type { AddressTypes, HexEncodedString, IBasicOutput, IOutputResponse, INftOutput } from '@iota/types';
+import { ILayer2Parameters, ILayer2TransferAllowanceMetadata } from './types';
 declare class L1ToL2 {
     private _client;
     private _fromAddressHex;
@@ -20,7 +20,17 @@ declare class L1ToL2 {
     private _getLayer2MetadataForTransfer;
     private _encodeAllowance;
     private _getAmountFromTransactionDetails;
-    private _getOutputOptions;
+    getOutputOptions(senderAddress: AddressTypes, recipientAddress: string, rawAmount: string, ext: {
+        nativeTokenId?: string;
+        metadata?: HexEncodedString;
+        tag?: string;
+        giftStorageDeposit?: boolean;
+        surplus?: string;
+        layer2Parameters?: ILayer2Parameters;
+        nftId?: string;
+        nftOutput?: INftOutput;
+        expirationDate?: Date;
+    }): Promise<IBasicOutput | INftOutput>;
     sendTransaction(toAddr: string, amount: string, nftId?: string): Promise<void>;
     ed2bech32(address: HexEncodedString): void;
     parseLayer2MetadataForTransfer(metadataHex: string): ILayer2TransferAllowanceMetadata;

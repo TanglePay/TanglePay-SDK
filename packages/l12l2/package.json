@@ -1,6 +1,6 @@
 {
   "name": "tanglepaysdk-l1tol2",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "iota shimmer l1 to l2 demo",
   "main": "dist/index.es.js",
   "types": "dist/types/index.d.ts",
