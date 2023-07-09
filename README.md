@@ -6,9 +6,14 @@ Welcome to the TanglePay SDK mono repo, a collection of packages for interacting
 
 This mono repo consists of the following packages:
 
-1. `@tanglepay/common`: A shared module with common utilities and interfaces used across the other packages.
-2. `@tanglepay/sdk`: The core TanglePay SDK package for interacting with the wallet, including account management, transactions, and balance queries.
-3. `@tanglepay/ethereum-provider`: An Ethereum provider adapter that enables the use of popular Ethereum libraries like web3.js with TanglePay, allowing developers to leverage existing code without modifications.
+1. `tanglepaysdk-client`: The core TanglePay SDK package for interacting with the wallet, including account management, transactions, and balance queries.  
+package repo is [here](https://github.com/TanglePay/TanglePay-SDK/tree/main/packages/sdk).  
+demo page is [here](https://tanglepay.github.io/TanglePay-SDK/packages/sdk/index.html).
+2. `tanglepaysdk-ethereumprovider`: An Ethereum provider adapter that enables the use of popular Ethereum libraries like web3.js with TanglePay, allowing developers to leverage existing code without modifications.  
+package repo is [here](https://github.com/TanglePay/TanglePay-SDK/tree/main/packages/ethprovider).  
+demo page is [here](https://tanglepay.github.io/TanglePay-SDK/packages/ethprovider/index.html).
+3. `tanglepaysdk-common`: A shared module with common utilities and interfaces used across the other packages.
+
 
 ## Getting Started
 
