@@ -259,6 +259,13 @@
                     </div>
                     <button onclick="onEthSendContractTransaction()" class="btn btn-primary">ETH Send Transaction</button>
                 </div>
+                 <div class="block">
+                    <h4>eth_importContract (contract)</h4>
+                    <div class="address-input">
+                        <input id="eth_import_contract" type="text" placeholder="contract">
+                    </div>
+                    <button onclick="onEthImportContract()" class="btn btn-primary">ETH Import Contract</button>
+                </div>
             </div>
 
             <div class="right">
@@ -599,7 +606,32 @@ Connect result: ${JSON.stringify(res)}
                     return res
                 } catch (error) {
                     dom.innerText += `
-    Send Transaction result: ${JSON.stringify(error)}
+    Send Transaction result: ${error}
+    `
+                    return error
+                }
+            }
+
+            window.onEthImportContract = async ()=>{
+                const contract = document.getElementById('eth_import_contract').value
+                if(!contract){
+                    return
+                }
+                try {
+                    const res = await iota.request({
+                        method: 'eth_importContract',
+                        params: {
+                            contract,
+                        }
+                    })
+
+                    dom.innerText += `
+    import contract result: ${JSON.stringify(res)}
+    `
+                    return res
+                } catch (error) {
+                    dom.innerText += `
+    import contract error: ${JSON.stringify(error)}
     `
                     return error
                 }
