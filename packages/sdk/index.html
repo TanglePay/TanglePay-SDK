@@ -219,6 +219,9 @@
 
                 <div class="block">
                     <h4>iota_getPublicKey</h4>
+                    <div class="address-input">
+                        <input id="public_key_address" type="text" placeholder="publickey address">
+                    </div>
                     <button onclick="getPublicKey()" class="btn btn-primary">Get PublicKey</button>
                 </div>
 
@@ -670,10 +673,11 @@ Connect result: ${JSON.stringify(res)}
             }
 
             window.getPublicKey = async () => {
+                const address = document.getElementById('public_key_address').value
                 try {
                     const res = await iota.request({
                         method: 'iota_getPublicKey',
-                        params: { address: '##currentAddress' }
+                        params: { address }
                     })
                     dom.innerText += `
     Get publicKey result: ${JSON.stringify(res)}

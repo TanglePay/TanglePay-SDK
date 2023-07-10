@@ -412,4 +412,4 @@ If you can't retrieve the user's account(s), you should encourage the user to in
 
 ### Create a sample DApp on IOTA
 
-Please refer to the demo [here](https://tanglepay.github.io/TanglePay-SDK/).
+Please refer to the demo [here](https://tanglepay.github.io/TanglePay-SDK/packages/sdk/index.html).
