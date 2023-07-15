@@ -2,11 +2,9 @@
     "name": "tanglepaysdk-client",
     "version": "0.1.7",
     "description": "DApp SDK to interact with TanglePay wallets",
-    "main": "dist/index.es.js",
-    "types": "dist/types/index.d.ts",
+    "main": "dist/esm/index.js",
+    "types": "dist/index.d.ts",
     "type": "module",
-    "browser": "dist/index.min.js",
-    "module": "dist/index.es.js",
     "moduleNameIife": "iota",
     "scripts": {
         "clean": "rimraf dist",

@@ -280,7 +280,7 @@
     <script>
         const dom = document.getElementById('text')
         const status = document.getElementById('status')
-        iota.redirectAppStoreIfNotInstalled = false ;
+        iota.redirectAppStoreIfNotInstalled = false;
         window.addEventListener('iota-ready', () => {
             status.innerText = `${iota?.isTanglePay ? 'TanglePay installed' : 'TanglePay not installed'}
             Version: ${iota.tanglePayVersion || '--'}

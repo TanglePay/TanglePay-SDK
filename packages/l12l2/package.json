@@ -2,17 +2,15 @@
   "name": "tanglepaysdk-l1tol2",
   "version": "0.1.7",
   "description": "iota shimmer l1 to l2 demo",
-  "main": "dist/index.es.js",
-  "types": "dist/types/index.d.ts",
+  "main": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
-  "browser": "dist/index.min.js",
-  "module": "dist/index.es.js",
   "moduleNameIife": "l12l2",
   "scripts": {
     "clean": "rimraf dist",
     "build:type": "tsc",
     "build:source": "rollup --config rollup.config.mjs",
-    "build": "npm run clean; npm run build:type; npm run build:source",
+    "build": "yarn run clean && yarn run build:type && yarn run build:source",
     "lint": "eslint src --fix --ext .ts,.js"
   },
   "repository": {

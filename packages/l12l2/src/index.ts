@@ -322,7 +322,7 @@ class L1ToL2 {
       surplus,
     ) : (metadata ? Converter.utf8ToHex(metadata, true) : metadata);
       
-    recipientAddress = layer2Parameters ? await this._client.bech32ToHex(layer2Parameters.networkAddress) : recipientAddress;
+    recipientAddress = layer2Parameters ? await this._client!.bech32ToHex(layer2Parameters.networkAddress) : recipientAddress;
     
     const assets: Assets = {};
     if (nftId) {
