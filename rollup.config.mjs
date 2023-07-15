@@ -26,15 +26,14 @@ export function decoratePlugin(configs,plug,isFront = false){
         }
     })
 }
-export function decorateIifeExternal(config,obj){
-    config.output[0] = Object.assign(config.output[0],{globals: obj})
+export function decorateIifeExternal(config,obj,idx=0){
+    config.output[idx] = Object.assign(config.output[idx],{globals: obj})
     config.external = Object.keys(obj)
 }
 
 export function createRollupConfig(pkg) {
     const moduleName = pkg.name;
     const moduleNameIife = pkg.moduleNameIife;
-    const inputFileName = "src/index.ts";
     const author = pkg.author;
     const banner = `/**
                        * @license
@@ -44,53 +43,51 @@ export function createRollupConfig(pkg) {
                        */
                     `;
     return [{
-        input: inputFileName, // bundle entry point
-        output: {
-            file: pkg.module, // output destination
-            format: "es",
-            name: moduleName,
-            sourcemap: "inline",
-            banner
-        },
+        input: 'src/index.ts', // bundle entry point
+        output:  [
+            {
+                file: 'dist/iife/index.js', // The IIFE bundle for browsers
+                format: 'iife',
+                name: moduleNameIife, // This will be the global variable name in browsers
+                sourcemap: true,
+                banner
+            },
+            {
+              file: 'dist/cjs/index.js', // The CommonJS bundle
+              format: 'cjs',
+              sourcemap: true,
+              banner
+            },
+            {
+              file: 'dist/esm/index.js', // The ESM bundle
+              format: 'esm',
+              sourcemap: true,
+              banner
+            },
+            
+          ],
+        plugins: [
+            typescript({
+                "declaration": true,
+                "declarationMap": true,
+                "outDir": "dist",
+                "rootDir": "src",
+            }), // Transpiles your TypeScript
+            nodePolyfills(), // Polyfills required Node.js builtins
+            babel({ 
+                exclude: 'node_modules/**', 
+                babelHelpers: 'bundled' 
+            }), // Transpiles your JavaScript to ES5
+            commonjs(), // Converts CommonJS modules to ES6
+            resolve(), // Allows node_modules resolution
+            terser(), // Minifies the output
+            filesize() // Show the size of the output
+        ],
         external: [
             ...Object.keys(pkg.dependencies || {}),
             ...Object.keys(pkg.devDependencies || {}),
         ],
-        plugins: [
-            typescript({"declaration": false,
-                "declarationMap": false}),// parse typeScript
-            commonjs(), // transform commonjs to ES2015 module for rollup to proceed
-            babel({
-                exclude: '**/node_modules/**',
-                babelHelpers: "bundled"
-            }),
-            resolve(), // lookup and bundle third party packages
-            terser(), // compress
-            filesize(), // log size of output files to console
-        ],
-    },
-        {
-            input: inputFileName, // bundle entry point
-            output: [{
-                file: pkg.browser,
-                format: "iife",
-                name: moduleNameIife,
-                banner,
-                sourcemap: "inline",
-                extend: true
-            }],
-            plugins: [
-                typescript(), // parse typeScript
-                commonjs(), // transform commonjs to ES2015 module for rollup to proceed
-                babel({
-                    exclude: '**/node_modules/**',
-                    babelHelpers: "bundled"
-                }),
-                nodePolyfills(),
-                resolve(), // lookup and bundle third party packages
-                terser(), // compress
-                filesize(), // log size of output files to console
-            ],
-        }];
+
+    }];
 
 }

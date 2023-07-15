@@ -2,11 +2,9 @@
   "name": "tanglepaysdk-common",
   "version": "0.1.7",
   "description": "",
-  "main": "dist/index.es.js",
-  "types": "dist/types/index.d.ts",
+  "main": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
-  "browser": "dist/index.min.js",
-  "module": "dist/index.es.js",
   "moduleNameIife": "TanglePaySdkCommon",
   "scripts": {
     "clean": "rimraf dist",
@@ -20,7 +18,6 @@
   "license": "ISC",
   "devDependencies": {},
   "dependencies": {
-    "@iota/client-wasm": "^1.0.0-alpha.2",
     "web3": "^1.8.2"
   }
 }

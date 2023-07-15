@@ -50,6 +50,7 @@ const IotaSDK = {
   isTanglePay: false,
   tanglePayVersion: '',
   _events: new EventEmitter(),
+  _waitReady:Promise<void>,
 
   request: async ({ method, params, timeout = 30000 }:{ method: string, timeout?: number, params: unknown }) => {
     if (!IotaSDK.isTanglePay) {
@@ -89,6 +90,7 @@ _stream.on('data', (data_?:any)=>{
     case 'getTanglePayInfo':
       IotaSDK.tanglePayVersion = data?.version;
       window.dispatchEvent(new CustomEvent('iota-ready'));
+      IotaSDK._events.emit('iota-ready', '');
       break;
     case 'iota_request':
       {
@@ -119,6 +121,16 @@ _stream.on('data', (data_?:any)=>{
 
 let loadNum = 0;
 const onLoad = () => {
+  /*
+  let readyResolve:(value:unknown)=>void;
+  
+  IotaSDK._waitReady = new Promise((resolve, reject)=>{
+    readyResolve = resolve;
+    setTimeout(()=>{
+      reject('timeout');
+    },15000);
+  })
+*/
   const sharedContext = window as unknown as WindowSharedContext;
   const env = sharedContext.TanglePayEnv;
   if (!env) {
@@ -144,6 +156,7 @@ const onLoad = () => {
     default:
       {
         window.dispatchEvent(new CustomEvent('iota-ready'));
+        IotaSDK._events.emit('iota-ready', '');
         toInstall(IotaSDK.redirectAppStoreIfNotInstalled);
       }
       break;
