@@ -20,4 +20,9 @@ export declare interface IotaEventCapsule {
     }, code?: unknown) => void;
     callBack: Function;
 }
+export declare interface IotaReadyEventData {
+    isTanglePayInstalled: boolean;
+    tanglePayVersion: string;
+    environment: 'app' | 'chrome' | 'unknown';
+}
 //# sourceMappingURL=types.d.ts.map
