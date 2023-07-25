@@ -1,6 +1,6 @@
 
 import { toInstall } from './service';
-import { IotaResponse, SendToScriptParam, WindowSharedContext } from './types';
+import { IotaReadyEventData, IotaResponse, SendToScriptParam, WindowSharedContext } from './types';
 import { EventEmitter } from 'events';
 import {EventCallback, JsonRpcEngine, JsonRpcId, JsonRpcResponse, WindowPostStream} from 'tanglepaysdk-common';
 
@@ -46,7 +46,7 @@ const _rpcEngine = JsonRpcEngine
   })
   .build();
 const IotaSDK = {
-  redirectAppStoreIfNotInstalled: false,
+  //redirectAppStoreIfNotInstalled: false,
   isTanglePay: false,
   tanglePayVersion: '',
   _events: new EventEmitter(),
@@ -54,7 +54,9 @@ const IotaSDK = {
 
   request: async ({ method, params, timeout = 30000 }:{ method: string, timeout?: number, params: unknown }) => {
     if (!IotaSDK.isTanglePay) {
-      toInstall(IotaSDK.redirectAppStoreIfNotInstalled);
+      console.log('tanglepay not installed');
+      return
+      //toInstall(IotaSDK.redirectAppStoreIfNotInstalled);
     }
     method = !['eth_sign', 'personal_sign'].includes(method) ? method : 'iota_sign';
     // @ts-ignore
@@ -89,8 +91,13 @@ _stream.on('data', (data_?:any)=>{
   switch (cmd) {
     case 'getTanglePayInfo':
       IotaSDK.tanglePayVersion = data?.version;
-      window.dispatchEvent(new CustomEvent('iota-ready'));
-      IotaSDK._events.emit('iota-ready', '');
+      const eventData:IotaReadyEventData = {
+        isTanglePayInstalled: true,
+        tanglePayVersion: data?.version,
+        environment: _stream.isMobile ? 'app' : 'chrome',
+      }
+      window.dispatchEvent(new CustomEvent('iota-ready',{detail:eventData}));
+      IotaSDK._events.emit('iota-ready', eventData);
       break;
     case 'iota_request':
       {
@@ -121,6 +128,7 @@ _stream.on('data', (data_?:any)=>{
 
 let loadNum = 0;
 const onLoad = () => {
+  console.log('onLoad', loadNum);
   /*
   let readyResolve:(value:unknown)=>void;
   
@@ -140,6 +148,7 @@ const onLoad = () => {
       return;
     }
   }
+  console.log('onLoad for env:', env);
   switch (env) {
     case 'app':
     case 'chrome':
@@ -155,9 +164,16 @@ const onLoad = () => {
       break;
     default:
       {
-        window.dispatchEvent(new CustomEvent('iota-ready'));
-        IotaSDK._events.emit('iota-ready', '');
-        toInstall(IotaSDK.redirectAppStoreIfNotInstalled);
+        console.log('not tanglepay');
+        const eventData:IotaReadyEventData = {
+          isTanglePayInstalled: false,
+          tanglePayVersion: '',
+          environment: 'unknown',
+        }
+
+        window.dispatchEvent(new CustomEvent('iota-ready',{detail:eventData}));
+        IotaSDK._events.emit('iota-ready', eventData);
+        //toInstall(IotaSDK.redirectAppStoreIfNotInstalled);
       }
       break;
   }
