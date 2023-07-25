@@ -16,3 +16,8 @@ export declare interface IotaEventCapsule {
   handler: (res: { address: string, nodeId: string }, code?:unknown) => void;
   callBack: Function;
 }
+export declare interface IotaReadyEventData {
+  isTanglePayInstalled: boolean;
+  tanglePayVersion: string;
+  environment: 'app' | 'chrome' | 'unknown';
+}
