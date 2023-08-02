@@ -1,5 +1,4 @@
 
-import { toInstall } from './service';
 import { IotaReadyEventData, IotaResponse, SendToScriptParam, WindowSharedContext } from './types';
 import { EventEmitter } from 'events';
 import {EventCallback, JsonRpcEngine, JsonRpcId, JsonRpcResponse, WindowPostStream} from 'tanglepaysdk-common';
