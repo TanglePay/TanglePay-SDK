@@ -269,6 +269,14 @@
                     </div>
                     <button onclick="onEthImportContract()" class="btn btn-primary">ETH Import Contract</button>
                 </div>
+                <div class="block">
+                    <h4>eth_importNFT</h4>
+                    <div class="address-input">
+                        <input id="eth_import_nft" type="text" placeholder="contract">
+                        <input id="eth_import_token_id" type="text" placeholder="tokenId">
+                    </div>
+                    <button onclick="onEthImportNFT()" class="btn btn-primary">ETH Import NFT</button>
+                </div>
             </div>
 
             <div class="right">
@@ -611,6 +619,33 @@ Connect result: ${JSON.stringify(res)}
                 } catch (error) {
                     dom.innerText += `
     Send Transaction result: ${error}
+    `
+                    return error
+                }
+            }
+
+            window.onEthImportNFT = async () => {
+                const nft = document.getElementById('eth_import_nft').value
+                const tokenId = document.getElementById('eth_import_token_id').value
+                if(!nft || !tokenId) {
+                    return
+                }
+                try {
+                    const res = await iota.request({
+                        method: 'eth_importNFT',
+                        params: {
+                            nft,
+                            tokenId: parseInt(tokenId)
+                        }
+                    })
+
+                    dom.innerText += `
+    import nft result: ${JSON.stringify(res)}
+    `
+                    return res
+                } catch (error) {
+                    dom.innerText += `
+    import nft error: ${JSON.stringify(error)}
     `
                     return error
                 }

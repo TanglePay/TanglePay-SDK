@@ -374,6 +374,32 @@ function App() {
     }
   };
 
+  const [importNFTData, setImportNFTData] = useState({
+    nft: '',
+    tokenId: undefined,
+  });
+  const ethImportNFT = async () => {
+    const { nft, tokenId } = importNFTData;
+    if (!nft || !tokenId) {
+      return;
+    }
+    try {
+      const res = await iota.request({
+        method: 'eth_importNFT',
+        params: {
+          nft,
+          tokenId: parseInt(tokenId),
+        },
+      });
+
+      showText(`import nft result: ${JSON.stringify(res)}`);
+      return res;
+    } catch (error) {
+      showText(`import nft error: ${JSON.stringify(error)}`);
+      return error;
+    }
+  };
+
   return (
     <div className="App">
       <Header />
@@ -861,6 +887,38 @@ function App() {
             </div>
             <button onClick={ethImportContract} className="btn btn-primary">
               ETH Import Contract
+            </button>
+          </div>
+          <div className="block">
+            <h4>eth_importNFT</h4>
+            <div className="address-input">
+              <input
+                id="eth_import_contract"
+                type="text"
+                placeholder="contract"
+                value={importNFTData.nft}
+                onChange={(e) =>
+                  setImportNFTData((s) => ({
+                    ...s,
+                    nft: e.target.value,
+                  }))
+                }
+              />
+              <input
+                id="eth_import_contract"
+                type="text"
+                placeholder="tokenId"
+                value={importNFTData.tokenId}
+                onChange={(e) =>
+                  setImportNFTData((s) => ({
+                    ...s,
+                    tokenId: e.target.value,
+                  }))
+                }
+              />
+            </div>
+            <button onClick={ethImportNFT} className="btn btn-primary">
+              ETH Import NFT
             </button>
           </div>
         </div>
