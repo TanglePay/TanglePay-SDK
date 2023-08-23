@@ -63,6 +63,9 @@ const IotaSDK = {
       cmd: 'iota_request',
       data: { method, params },
     } });
+    if(res.error) {
+      throw res.error
+    }
     return res.data;
   },
   on: (event: string, callBack : EventCallback) => {
