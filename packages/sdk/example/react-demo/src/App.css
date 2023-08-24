@@ -1,5 +1,6 @@
 body {
   padding: 20px;
+  color: #000;
 }
 #text {
   word-break: break-all;
