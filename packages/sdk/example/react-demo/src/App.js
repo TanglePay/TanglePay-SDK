@@ -122,12 +122,13 @@ function App() {
 
   const [iotaSendData, setIotaSendData] = useState({
     address: '',
-    amount: 0,
+    amount: '',
     data: '',
     unit: 'Mi',
+    tag: '',
   });
   const sendTransaction = async () => {
-    const { address, amount, data, unit } = iotaSendData;
+    const { address, amount, data, tag, unit } = iotaSendData;
     if (!address || !amount) {
       return;
     }
@@ -139,6 +140,7 @@ function App() {
           value: parseFloat(amount),
           data,
           unit,
+          tag,
         },
       });
 
@@ -152,13 +154,14 @@ function App() {
 
   const [shimmerSendData, setShimmerSendData] = useState({
     address: '',
-    amount: 0,
+    amount: '',
     data: '',
     tag: '',
+    metadata: '',
     unit: 'SMR',
   });
   const sendTransactionShimmer = async () => {
-    const { address, amount, data, tag, unit } = shimmerSendData;
+    const { address, amount, data, tag, unit, metadata } = shimmerSendData;
     if (!address || !amount) {
       return;
     }
@@ -171,6 +174,7 @@ function App() {
           data,
           unit,
           tag,
+          metadata,
         },
       });
 
@@ -184,13 +188,15 @@ function App() {
 
   const [sendShimmerTokenData, setSendShimmerTokenData] = useState({
     address: '',
-    amount: 0,
+    amount: '',
     data: '',
     tag: '',
     assetId: '',
+    metadata: '',
   });
   const sendTransactionShimmerToken = async () => {
-    const { address, amount, data, tag, assetId } = sendShimmerTokenData;
+    const { address, amount, data, tag, assetId, metadata } =
+      sendShimmerTokenData;
     if (!address || !amount || !assetId) {
       return;
     }
@@ -203,6 +209,7 @@ function App() {
           data,
           assetId,
           tag,
+          metadata,
         },
       });
 
@@ -219,9 +226,10 @@ function App() {
     data: '',
     tag: '',
     nftId: '',
+    metadata: '',
   });
   const sendTransactionShimmerNft = async () => {
-    const { address, data, tag, nftId } = sendShimmerNFTData;
+    const { address, data, tag, metadata, nftId } = sendShimmerNFTData;
     if (!address || !nftId) {
       return;
     }
@@ -233,6 +241,7 @@ function App() {
           data,
           nftId,
           tag,
+          metadata,
         },
       });
 
@@ -532,6 +541,17 @@ function App() {
                 }
               />
               <input
+                id="iota_tag"
+                placeholder="tag"
+                value={iotaSendData.tag}
+                onChange={(e) =>
+                  setIotaSendData((s) => ({
+                    ...s,
+                    tag: e.target.value,
+                  }))
+                }
+              />
+              <input
                 id="iota_data"
                 placeholder="data"
                 value={iotaSendData.data}
@@ -593,6 +613,17 @@ function App() {
                   setShimmerSendData((s) => ({
                     ...s,
                     tag: e.target.value,
+                  }))
+                }
+              />
+              <input
+                id="shimmer_metadata"
+                placeholder="metadata"
+                value={shimmerSendData.metadata}
+                onChange={(e) =>
+                  setShimmerSendData((s) => ({
+                    ...s,
+                    metadata: e.target.value,
                   }))
                 }
               />
@@ -667,6 +698,17 @@ function App() {
                 }
               />
               <input
+                id="shimmer_token_metadata"
+                placeholder="metadata"
+                value={sendShimmerTokenData.metadata}
+                onChange={(e) =>
+                  setSendShimmerTokenData((s) => ({
+                    ...s,
+                    metadata: e.target.value,
+                  }))
+                }
+              />
+              <input
                 id="shimmer_token_data"
                 placeholder="data"
                 value={sendShimmerTokenData.data}
@@ -718,6 +760,17 @@ function App() {
                   setSendShimmerNFTData((s) => ({
                     ...s,
                     tag: e.target.value,
+                  }))
+                }
+              />
+              <input
+                id="shimmer_nft_metadata"
+                placeholder="metadata"
+                value={sendShimmerNFTData.metadata}
+                onChange={(e) =>
+                  setSendShimmerNFTData((s) => ({
+                    ...s,
+                    metadata: e.target.value,
                   }))
                 }
               />

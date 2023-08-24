@@ -160,6 +160,7 @@
                     <div class="address-input">
                         <input id="iota_address" type="text" placeholder="send to ( address ) ">
                         <input id="iota_amount" type="number" placeholder="amount">
+                        <input id="iota_tag" placeholder="tag">
                         <input id="iota_data" placeholder="data">
                         <input id="iota_unit" placeholder="unit (Optional)" value="Mi">
                     </div>
@@ -171,6 +172,7 @@
                         <input id="shimmer_address" type="text" placeholder="send to ( address ) ">
                         <input id="shimmer_amount" type="number" placeholder="amount">
                         <input id="shimmer_tag" placeholder="tag">
+                        <input id="shimmer_metadata" placeholder="metadata">
                         <input id="shimmer_data" placeholder="data">
                         <input id="shimmer_unit" placeholder="unit (Optional)" value="SMR">
                     </div>
@@ -186,6 +188,7 @@
                         <input id="shimmer_token_address" type="text" placeholder="send to ( address ) ">
                         <input id="shimmer_token_amount" type="number" placeholder="amount">
                         <input id="shimmer_token_tag" placeholder="tag">
+                        <input id="shimmer_token_metadata" placeholder="metadata">
                         <input id="shimmer_token_data" placeholder="data">
                         <input id="shimmer_token_assetId" placeholder="assetId">
                     </div>
@@ -196,6 +199,7 @@
                     <div class="address-input">
                         <input id="shimmer_nft_address" type="text" placeholder="send to ( address ) ">
                         <input id="shimmer_nft_tag" placeholder="tag">
+                        <input id="shimmer_nft_metadata" placeholder="metadata">
                         <input id="shimmer_nft_data" placeholder="data">
                         <input id="shimmer_nft_assetId" placeholder="nftId">
                     </div>
@@ -446,39 +450,8 @@ Connect result: ${JSON.stringify(res)}
                 const address = document.getElementById('iota_address').value
                 const amount = document.getElementById('iota_amount').value
                 const data = document.getElementById('iota_data').value || ''
+                const tag = document.getElementById('iota_tag').value || ''
                 const unit = document.getElementById('iota_unit').value || ''
-                if(!address || !amount){
-                    return
-                }
-                try {
-                    const res = await iota.request({
-                        method: 'iota_sendTransaction',
-                        params: {
-                            to: address,
-                            value: parseFloat(amount),
-                            data,
-                            unit
-                        }
-                    })
-
-                    dom.innerText += `
-    Send Transaction result: ${JSON.stringify(res)}
-    `
-                    return res
-                } catch (error) {
-                    dom.innerText += `
-    Send Transaction result: ${JSON.stringify(error)}
-    `
-                    return error
-                }
-            }
-
-            window.sendTransactionShimmer = async () => {
-                const address = document.getElementById('shimmer_address').value
-                const amount = document.getElementById('shimmer_amount').value
-                const data = document.getElementById('shimmer_data').value || ''
-                const tag = document.getElementById('shimmer_tag').value || ''
-                const unit = document.getElementById('shimmer_unit').value || ''
                 if(!address || !amount){
                     return
                 }
@@ -506,10 +479,46 @@ Connect result: ${JSON.stringify(res)}
                 }
             }
 
+            window.sendTransactionShimmer = async () => {
+                const address = document.getElementById('shimmer_address').value
+                const amount = document.getElementById('shimmer_amount').value
+                const data = document.getElementById('shimmer_data').value || ''
+                const tag = document.getElementById('shimmer_tag').value || ''
+                const metadata = document.getElementById('shimmer_metadata').value || ''
+                const unit = document.getElementById('shimmer_unit').value || ''
+                if(!address || !amount){
+                    return
+                }
+                try {
+                    const res = await iota.request({
+                        method: 'iota_sendTransaction',
+                        params: {
+                            to: address,
+                            value: parseFloat(amount),
+                            data,
+                            unit,
+                            tag,
+                            metadata
+                        }
+                    })
+
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(res)}
+    `
+                    return res
+                } catch (error) {
+                    dom.innerText += `
+    Send Transaction result: ${JSON.stringify(error)}
+    `
+                    return error
+                }
+            }
+
             window.sendTransactionShimmerToken = async () => {
                 const address = document.getElementById('shimmer_token_address').value
                 const amount = document.getElementById('shimmer_token_amount').value
                 const data = document.getElementById('shimmer_token_data').value || ''
+                const metadata = document.getElementById('shimmer_token_metadata').value || ''
                 const tag = document.getElementById('shimmer_token_tag').value || ''
                 const assetId = document.getElementById('shimmer_token_assetId').value || ''
                 if(!address || !amount || !assetId){
@@ -523,7 +532,8 @@ Connect result: ${JSON.stringify(res)}
                             value: parseFloat(amount),
                             data,
                             assetId,
-                            tag
+                            tag,
+                            metadata
                         }
                     })
 
@@ -543,6 +553,7 @@ Connect result: ${JSON.stringify(res)}
                 const address = document.getElementById('shimmer_nft_address').value
                 const data = document.getElementById('shimmer_nft_data').value || ''
                 const tag = document.getElementById('shimmer_nft_tag').value || ''
+                const metadata= document.getElementById('shimmer_nft_metadata').value || ''
                 const nftId = document.getElementById('shimmer_nft_assetId').value || ''
                 if(!address || !nftId){
                     return
@@ -554,7 +565,8 @@ Connect result: ${JSON.stringify(res)}
                             to: address,
                             data,
                             nftId,
-                            tag
+                            tag,
+                            metadata
                         }
                     })
 
