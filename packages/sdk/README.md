@@ -42,9 +42,9 @@ flowchart TB
 
 Package Bundlers
 
-`npm install tanglepay-sdk --save`
+`npm install tanglepaysdk-client --save`
 
-`yarn add tanglepay-sdk`
+`yarn add tanglepaysdk-client`
 
 Standalone Browser Script
 
@@ -56,7 +56,7 @@ For any non-trivial IOTA web application — a.k.a. dapp, web3 site etc. — to 
 
 ```javascript
 // esm module
-import iota from 'tanglepay-sdk'
+import iota from 'tanglepaysdk-client'
 ```
 
 ```javascript
