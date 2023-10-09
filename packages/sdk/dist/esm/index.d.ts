@@ -29,5 +29,6 @@ declare const IotaSDK: {
     removeListener(event: string, callBack: EventCallback): void;
     removeAllListener(event: string): void;
 };
+export declare const onLoad: () => void;
 export default IotaSDK;
 //# sourceMappingURL=index.d.ts.map
