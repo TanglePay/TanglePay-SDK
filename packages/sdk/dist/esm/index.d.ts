@@ -26,9 +26,9 @@ declare const IotaSDK: {
         params: unknown;
     }) => Promise<Partial<unknown> | undefined>;
     on: (event: string, callBack: EventCallback) => void;
+    onLoad: () => void;
     removeListener(event: string, callBack: EventCallback): void;
     removeAllListener(event: string): void;
 };
-export declare const onLoad: () => void;
 export default IotaSDK;
 //# sourceMappingURL=index.d.ts.map

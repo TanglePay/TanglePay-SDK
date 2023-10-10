@@ -72,6 +72,9 @@ const IotaSDK = {
     const key = `iota_event_${event}`;
     IotaSDK._events.on(key, callBack);
   },
+  onLoad: () => {
+    onLoad();
+  },
   removeListener(event: string, callBack: EventCallback) {
     const key = `iota_event_${event}`;
     IotaSDK._events.removeListener(event, callBack);
@@ -129,7 +132,7 @@ _stream.on('data', (data_?:any)=>{
 });
 
 let loadNum = 0;
-export const onLoad = () => {
+const onLoad = () => {
   console.log('onLoad', loadNum);
   /*
   let readyResolve:(value:unknown)=>void;

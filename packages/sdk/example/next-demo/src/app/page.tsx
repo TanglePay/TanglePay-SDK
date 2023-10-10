@@ -23,7 +23,7 @@ export default function Home() {
         });
         console.log('connectRes', connectRes)
       })
-      iota.current.onLoad()
+      iota.current.default.onLoad()
     }
   }
   useEffect(() => {
