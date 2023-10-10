@@ -1,7 +1,7 @@
 /**
  * @license
  * author:
- * tanglepaysdk-common.js v0.1.8
+ * tanglepaysdk-common.js v0.1.9
  * Released under the ISC license.
  */
 var TanglePaySdkCommon = (function (e) {

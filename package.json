@@ -1,6 +1,6 @@
 {
   "name": "tanglepay-sdk-monorepo",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "DApp SDK to interact with TanglePay wallets",
   "type": "module",
   "scripts": {
