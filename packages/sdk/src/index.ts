@@ -129,7 +129,7 @@ _stream.on('data', (data_?:any)=>{
 });
 
 let loadNum = 0;
-const onLoad = () => {
+export const onLoad = () => {
   console.log('onLoad', loadNum);
   /*
   let readyResolve:(value:unknown)=>void;
