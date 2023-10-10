@@ -1,37 +1,36 @@
 {
-    "name": "tanglepaysdk-client",
-    "version": "0.1.7",
-    "description": "DApp SDK to interact with TanglePay wallets",
-    "main": "dist/esm/index.js",
-    "types": "dist/index.d.ts",
-    "type": "module",
-    "moduleNameIife": "iota",
-    "scripts": {
-        "clean": "rimraf dist",
-        "build:type": "tsc",
-        "build:source": "rollup --config rollup.config.mjs",
-        "build": "npm run clean && npm run build:type && npm run build:source",
-        "lint": "eslint src --fix --ext .ts,.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/TanglePay/TanglePay-SDK.git"
-    },
-    "keywords": [
-        "TanglePay",
-        "Dapp",
-        "Iota",
-        "wallet"
-    ],
-    "author": "TanglePay",
-    "license": "Apache-2.0",
-    "bugs": {
-        "url": "https://github.com/TanglePay/TanglePay-SDK/issues"
-    },
-    "homepage": "https://github.com/TanglePay/TanglePay-SDK#readme",
-    "devDependencies": {
-    },
-    "dependencies": {
-        "tanglepaysdk-common": "^0.1.4"
-    }
+  "name": "tanglepaysdk-client",
+  "version": "0.1.8",
+  "description": "DApp SDK to interact with TanglePay wallets",
+  "main": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "moduleNameIife": "iota",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build:type": "tsc",
+    "build:source": "rollup --config rollup.config.mjs",
+    "build": "npm run clean && npm run build:type && npm run build:source",
+    "lint": "eslint src --fix --ext .ts,.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TanglePay/TanglePay-SDK.git"
+  },
+  "keywords": [
+    "TanglePay",
+    "Dapp",
+    "Iota",
+    "wallet"
+  ],
+  "author": "TanglePay",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/TanglePay/TanglePay-SDK/issues"
+  },
+  "homepage": "https://github.com/TanglePay/TanglePay-SDK#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "tanglepaysdk-common": "^0.1.4"
+  }
 }
