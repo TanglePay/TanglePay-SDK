@@ -33,9 +33,8 @@
     "url": "https://github.com/TanglePay/TanglePay-SDK/issues"
   },
   "homepage": "https://github.com/TanglePay/TanglePay-SDK#readme",
-  "devDependencies": {},
   "dependencies": {
-    "tanglepaysdk-common": "^0.1.9",
-    "tanglepaysdk-client": "^0.1.9"
+    "tanglepaysdk-client": "^0.1.9",
+    "tanglepaysdk-common": "^0.1.9"
   }
 }
