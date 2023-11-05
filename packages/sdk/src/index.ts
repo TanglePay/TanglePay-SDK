@@ -32,6 +32,17 @@ const _rpcEngine = JsonRpcEngine
             if (method === 'iota_connect') {
               const address = res.address || '';
               context.curTanglePayAddress = address + '_' + res.nodeId;
+
+              // polyfill chainId
+              const nodeIdToChainId:Record<number, number> = {
+                1: 12345678903, // iota mainnet
+                102: 12345678901, // shimmer mainnet
+                101: 12345678900, // shimmer testnet
+              }
+              // if res.chainId is not set, set it to value of nodeIdToChainId[res.nodeId], if it exists
+              if (!res.chainId && nodeIdToChainId[res.nodeId]) {
+                res.chainId = nodeIdToChainId[res.nodeId]
+              }
             }
             resolve({ id, version:100, data: res });
           } else {
