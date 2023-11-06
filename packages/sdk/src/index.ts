@@ -107,13 +107,23 @@ _stream.on('data', (data_?:any)=>{
   switch (cmd) {
     case 'getTanglePayInfo':
       IotaSDK.tanglePayVersion = data?.version;
-      const eventData:IotaReadyEventData = {
-        isTanglePayInstalled: true,
-        tanglePayVersion: data?.version,
-        environment: _stream.isMobile ? 'app' : 'chrome',
+      if (!IotaSDK.isTanglePay) {
+        const env = data?.env;
+        if (env && ['app', 'chrome'].includes(env)) {
+          IotaSDK.isTanglePay = true;
+          _stream.isMobile = env == 'app';
+        }
       }
-      window.dispatchEvent(new CustomEvent('iota-ready',{detail:eventData}));
-      IotaSDK._events.emit('iota-ready', eventData);
+
+      if (IotaSDK.isTanglePay) {
+        const eventData:IotaReadyEventData = {
+          isTanglePayInstalled: true,
+          tanglePayVersion: data?.version,
+          environment: _stream.isMobile ? 'app' : 'chrome',
+        }
+        window.dispatchEvent(new CustomEvent('iota-ready',{detail:eventData}));
+        IotaSDK._events.emit('iota-ready', eventData);
+      }
       break;
     case 'iota_request':
       {
@@ -158,6 +168,10 @@ const onLoad = () => {
   const sharedContext = window as unknown as WindowSharedContext;
   const env = sharedContext.TanglePayEnv;
   if (!env) {
+    // @ts-ignore
+    _rpcEngine.request({ params:{
+      cmd: 'getTanglePayInfo',
+    } });
     loadNum++;
     if (loadNum <= 10) {
       setTimeout(onLoad, 300);
