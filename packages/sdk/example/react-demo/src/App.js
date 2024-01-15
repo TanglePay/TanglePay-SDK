@@ -124,11 +124,12 @@ function App() {
     address: '',
     amount: '',
     data: '',
-    unit: 'Mi',
+    unit: 'IOTA',
+    metadata: '',
     tag: '',
   });
   const sendTransaction = async () => {
-    const { address, amount, data, tag, unit } = iotaSendData;
+    const { address, amount, data, tag, unit, metadata } = iotaSendData;
     if (!address || !amount) {
       return;
     }
@@ -141,6 +142,7 @@ function App() {
           data,
           unit,
           tag,
+          metadata
         },
       });
 
@@ -537,6 +539,17 @@ function App() {
                   setIotaSendData((s) => ({
                     ...s,
                     amount: e.target.value,
+                  }))
+                }
+              />
+              <input
+                id="iota_metadata"
+                placeholder="metadata"
+                value={iotaSendData.metadata}
+                onChange={(e) =>
+                  setIotaSendData((s) => ({
+                    ...s,
+                    metadata: e.target.value,
                   }))
                 }
               />
