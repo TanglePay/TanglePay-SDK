@@ -1,0 +1,9 @@
+74 error Error: Command failed with exit code 1: git push --follow-tags --no-verify origin main
+74 error remote: error: GH006: Protected branch update failed for refs/heads/main.
+74 error remote: error: Changes must be made through a pull request.
+74 error To https://github.com/TanglePay/TanglePay-SDK.git
+74 error  * [new tag]         v0.1.11 -> v0.1.11
+74 error  ! [remote rejected] main -> main (protected branch hook declined)
+74 error error: failed to push some refs to 'https://github.com/TanglePay/TanglePay-SDK.git'
+74 error     at makeError (C:\Users\53524\code\TanglePay-SDK\node_modules\execa\lib\error.js:59:11)
+74 error     at handlePromise (C:\Users\53524\code\TanglePay-SDK\node_modules\execa\index.js:114:26)
