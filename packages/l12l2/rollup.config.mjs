@@ -10,7 +10,7 @@ decoratePlugin(config,copy({
         rename: 'client_wasm_bg.wasm'
     }]
 }))
-decorateIifeExternal(config[0],{
+decorateIifeExternal(config,{
   '@iota/util.js': 'IotaUtil',
   'big-integer':'bigInt'
 })
