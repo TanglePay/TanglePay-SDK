@@ -2,38 +2,83 @@ import resolve from "@rollup/plugin-node-resolve";
 import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
-import terser from '@rollup/plugin-terser'
+import terser from '@rollup/plugin-terser';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
-import filesize from 'rollup-plugin-filesize'
+import filesize from 'rollup-plugin-filesize';
 
-/*
-config[1].output[0] = Object.assign(config[1].output[0],{globals: {
-    '@iota/util.js': 'IotaUtil',
-    'big-integer':'bigInt'
-  },})
-config[1].external = [
-    '@iota/util.js',
-    'big-integer'
-  ]
-*/
-
-export function decoratePlugin(configs,plug,isFront = false){
-    configs.forEach((c)=>{
-        if (isFront) {
-            c.plugins.unshift(plug);
-        } else {
-            c.plugins.push(plug);
+// Abstracted external decorator for handling IIFE, CJS, and ESM
+export function decorateExternal(configs, obj, idx) {
+    const globals = {};
+    for (const [key, value] of Object.entries(obj)) {
+        if (value !== true) { // If value is not `true`, include it in `globals`
+            globals[key] = value;
         }
-    })
-}
-export function decorateIifeExternal(config,obj,idx=0){
-    config.output[idx] = Object.assign(config.output[idx],{globals: obj})
-    config.external = Object.keys(obj)
+    }
+
+    configs[idx].external = [...(configs[idx].external || []), ...Object.keys(obj)]; // Add everything to external
+
+    if (Object.keys(globals).length > 0) {
+        configs[idx].output[0] = Object.assign(configs[idx].output[0], { globals });
+    }
 }
 
-export function createRollupConfig(pkg) {
-    const moduleName = pkg.name;
+// Specific decorator for CJS
+export function decorateCjsExternal(configs, obj) {
+    decorateExternal(configs, obj, 1); // Call abstracted function with index 1 for CJS
+}
+
+// Specific decorator for ESM
+export function decorateEsmExternal(configs, obj) {
+    decorateExternal(configs, obj, 2); // Call abstracted function with index 2 for ESM
+}
+
+// Specific decorator for IIFE
+export function decorateIifeExternal(configs, obj) {
+    decorateExternal(configs, obj, 0); // Call abstracted function with index 0 for IIFE
+}
+
+// Plugin decorator
+export function decoratePlugin(configs, plugin, isFront = false) {
+    configs.forEach((config) => {
+        if (isFront) {
+            config.plugins.unshift(plugin); // Add plugin to the front of the array
+        } else {
+            config.plugins.push(plugin); // Add plugin to the end of the array
+        }
+    });
+}
+
+// Function to create the IIFE configuration
+export function createIifeRollupConfig(pkg, options = {}) {
     const moduleNameIife = pkg.moduleNameIife;
+    const author = pkg.author;
+    const banner = `/**
+                       * @license
+                       * author: ${author}
+                       * ${moduleNameIife}.js v${pkg.version}
+                       * Released under the ${pkg.license} license.
+                       */
+                    `;
+
+    return {
+        input: 'src/index.ts',
+        output: [
+            {
+                file: 'dist/iife/index.js',
+                format: 'iife',
+                name: moduleNameIife,
+                sourcemap: true,
+                banner
+            }
+        ],
+        plugins: getPlugins(options),
+        external: getExternals(pkg) // Default external handling for IIFE
+    };
+}
+
+// Function to create the CJS configuration
+export function createCjsRollupConfig(pkg, options = {}) {
+    const moduleName = pkg.name;
     const author = pkg.author;
     const banner = `/**
                        * @license
@@ -42,52 +87,90 @@ export function createRollupConfig(pkg) {
                        * Released under the ${pkg.license} license.
                        */
                     `;
-    return [{
-        input: 'src/index.ts', // bundle entry point
-        output:  [
+
+    return {
+        input: 'src/index.ts',
+        output: [
             {
-                file: 'dist/iife/index.js', // The IIFE bundle for browsers
-                format: 'iife',
-                name: moduleNameIife, // This will be the global variable name in browsers
+                file: 'dist/cjs/index.cjs',
+                format: 'cjs',
                 sourcemap: true,
                 banner
-            },
-            {
-              file: 'dist/cjs/index.js', // The CommonJS bundle
-              format: 'cjs',
-              sourcemap: true,
-              banner
-            },
-            {
-              file: 'dist/esm/index.js', // The ESM bundle
-              format: 'esm',
-              sourcemap: true,
-              banner
-            },
-            
-          ],
-        plugins: [
-            typescript({
-                "declaration": true,
-                "declarationMap": true,
-                "outDir": "dist",
-                "rootDir": "src",
-            }), // Transpiles your TypeScript
-            nodePolyfills(), // Polyfills required Node.js builtins
-            babel({ 
-                exclude: 'node_modules/**', 
-                babelHelpers: 'bundled' 
-            }), // Transpiles your JavaScript to ES5
-            commonjs(), // Converts CommonJS modules to ES6
-            resolve(), // Allows node_modules resolution
-            terser(), // Minifies the output
-            filesize() // Show the size of the output
+            }
         ],
-        external: [
-            ...Object.keys(pkg.dependencies || {}),
-            ...Object.keys(pkg.devDependencies || {}),
+        plugins: getPlugins(options),
+        external: getExternals(pkg) // Default external handling for CJS
+    };
+}
+
+// Function to create the ESM configuration
+export function createEsmRollupConfig(pkg, options = {}) {
+    const moduleName = pkg.name;
+    const author = pkg.author;
+    const banner = `/**
+                       * @license
+                       * author: ${author}
+                       * ${moduleName}.js v${pkg.version}
+                       * Released under the ${pkg.license} license.
+                       */
+                    `;
+
+    return {
+        input: 'src/index.ts',
+        output: [
+            {
+                file: 'dist/esm/index.js',
+                format: 'esm',
+                sourcemap: true,
+                banner
+            }
         ],
+        plugins: getPlugins(options),
+        external: getExternals(pkg) // Default external handling for ESM
+    };
+}
 
-    }];
+// Create the Rollup configuration for IIFE, ESM, and CJS
+export function createRollupConfig(pkg, options = {}) {
+    return [
+        createIifeRollupConfig(pkg, options),
+        createCjsRollupConfig(pkg, options),
+        createEsmRollupConfig(pkg, options)
+    ];
+}
 
+// Shared plugins configuration
+function getPlugins(options = {}) {
+    return [
+        typescript({
+            declaration: true,
+            declarationMap: true,
+            outDir: "dist",
+            rootDir: "src",
+        }),
+        nodePolyfills({
+            exclude: ['crypto'] // Exclude crypto from node polyfills
+        }),
+        babel({
+            exclude: 'node_modules/**', // Ignore node_modules
+            babelHelpers: 'bundled'
+        }),
+        commonjs(), // Convert CommonJS to ES modules
+        resolve({
+            preferBuiltins: true,
+            browser: true // Ensures browser compatibility
+        }),
+        terser({
+            keep_classnames: options.keepClassNames || false // Minify and keep class names based on options
+        }),
+        filesize() // Show file size after build
+    ];
+}
+
+// External handling for dependencies based on the package.json
+function getExternals(pkg) {
+    return [
+        ...Object.keys(pkg.dependencies || {}),
+        ...Object.keys(pkg.devDependencies || {}),
+    ];
 }
