@@ -1,6 +1,6 @@
 {
   "name": "tanglepaysdk-client",
-  "version": "0.1.10",
+  "version": "0.1.12",
   "description": "DApp SDK to interact with TanglePay wallets",
   "main": "dist/esm/index.js",
   "types": "dist/index.d.ts",
@@ -30,6 +30,6 @@
   },
   "homepage": "https://github.com/TanglePay/TanglePay-SDK#readme",
   "dependencies": {
-    "tanglepaysdk-common": "^0.1.10"
+    "tanglepaysdk-common": "^0.1.12"
   }
 }
