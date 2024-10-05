@@ -8760,27 +8760,27 @@ swarm-js@^0.1.40:
     tar "^4.0.2"
     xhr-request "^1.0.1"
 
-tanglepaysdk-client@^0.1.13, "tanglepaysdk-client@file:C:\\Users\\53524\\code\\TanglePay-SDK\\packages\\sdk":
-  version "0.1.13"
+tanglepaysdk-client@^0.1.14, "tanglepaysdk-client@file:C:\\Users\\53524\\code\\TanglePay-SDK\\packages\\sdk":
+  version "0.1.14"
   resolved "file:packages/sdk"
   dependencies:
-    tanglepaysdk-common "^0.1.12"
+    tanglepaysdk-common "^0.1.13"
 
-tanglepaysdk-common@^0.1.13, "tanglepaysdk-common@file:C:\\Users\\53524\\code\\TanglePay-SDK\\packages\\common":
-  version "0.1.13"
+tanglepaysdk-common@^0.1.14, "tanglepaysdk-common@file:C:\\Users\\53524\\code\\TanglePay-SDK\\packages\\common":
+  version "0.1.14"
   resolved "file:packages/common"
   dependencies:
     web3 "^1.8.2"
 
 "tanglepaysdk-ethereumprovider@file:C:\\Users\\53524\\code\\TanglePay-SDK\\packages\\ethprovider":
-  version "0.1.13"
+  version "0.1.14"
   resolved "file:packages/ethprovider"
   dependencies:
-    tanglepaysdk-client "^0.1.12"
-    tanglepaysdk-common "^0.1.12"
+    tanglepaysdk-client "^0.1.13"
+    tanglepaysdk-common "^0.1.13"
 
 "tanglepaysdk-l1tol2@file:C:\\Users\\53524\\code\\TanglePay-SDK\\packages\\l12l2":
-  version "0.1.13"
+  version "0.1.14"
   resolved "file:packages/l12l2"
   dependencies:
     "@iota/client-wasm" "^1.0.0-alpha.2"
