@@ -1,0 +1,4 @@
+72 error Error: Command failed with exit code 128: git push --follow-tags --no-verify --atomic origin release_20241004
+72 error fatal: unable to access 'https://github.com/TanglePay/TanglePay-SDK.git/': HTTP/2 stream 1 was not closed cleanly before end of the underlying stream
+72 error     at makeError (C:\Users\53524\code\TanglePay-SDK\node_modules\execa\lib\error.js:59:11)
+72 error     at handlePromise (C:\Users\53524\code\TanglePay-SDK\node_modules\execa\index.js:114:26)
